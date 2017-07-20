@@ -3,21 +3,15 @@ var camera, scene, renderer;
 var geometry, material, mesh;
 var objects = [];
 
-var mouselock, controls;
+var mouselock, controls, pointerlock;
 
 
 var controlsEnabled = false;
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-var canJump = false;
-var prevTime = performance.now();
-var velocity = new THREE.Vector3();
+
 
 
 if (Detector.webgl) {
-    mouselock = new THREE.MouseLock(document);
+    mouselock = new THREE.MouseLock();
 
     init();
     animate();
@@ -43,7 +37,7 @@ function init() {
 
 
     //controls
-    controls = new THREE.Controls(scene, document);
+    controls = new THREE.Controls(document);
 
     // floor
 

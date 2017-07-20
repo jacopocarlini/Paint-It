@@ -1,4 +1,4 @@
-THREE.MouseLock = function(document){
+THREE.MouseLock = function(){
 
     var blocker = document.getElementById('blocker');
     var instructions = document.getElementById('instructions');
@@ -16,13 +16,13 @@ THREE.MouseLock = function(document){
             if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 
                 controlsEnabled = true;
-                // controls.enabled = true;
+                pointerlock.enabled = true;
 
                 blocker.style.display = 'none';
 
             } else {
 
-                // controls.enabled = false;
+                pointerlock.enabled = false;
 
                 blocker.style.display = '-webkit-box';
                 blocker.style.display = '-moz-box';
