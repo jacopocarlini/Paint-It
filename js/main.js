@@ -1,4 +1,4 @@
-var camera, scene, renderer;
+var camera, scene, renderer, mouse = new THREE.Vector2();
 
 var geometry, material, mesh;
 var objects = [];
@@ -24,7 +24,7 @@ if (Detector.webgl) {
 function init() {
     //camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.y = 0;
+    camera.position.y = 10;
 
     //scene
     scene = new THREE.Scene();

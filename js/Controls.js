@@ -7,6 +7,7 @@ THREE.Controls = function(document) {
     var prevTime = performance.now();
     var velocity = new THREE.Vector3();
     var speed = 1.0;
+    var mass = 100.0;
 
     pointerlock = new THREE.PointerLockControls(camera);
     scene.add(pointerlock.getObject());
@@ -83,7 +84,7 @@ THREE.Controls = function(document) {
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
 
-    var raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 10);
+    var raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 100);
 
     //Methods
 
@@ -92,11 +93,43 @@ THREE.Controls = function(document) {
 
         if (controlsEnabled) {
             raycaster.ray.origin.copy(pointerlock.getObject().position);
-            raycaster.ray.origin.y -= 10;
+            // raycaster.ray.origin.y -= 10;
+
+            raycaster.ray.direction.copy(pointerlock.getDirection());
 
             var intersections = raycaster.intersectObjects(objects);
+            for (var i = 0; i < intersections.length; i++) {
+                intersections[i].object.material.color.set(0xff0000);
+            }
 
+
+            // var isOnObject = intersections.length > 0;
             var isOnObject = intersections.length > 0;
+
+            
+            // var isOnObjectX = false;
+            // var isOnObjectMX = false;
+            // var isOnObjectY = false;
+            // var isOnObjectZ = false;
+            // for(var i=0; objects.length; i++){
+                // var collisionX = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 5);
+                // collisionX.ray.origin.copy(pointerlock.getObject().position);
+                // collisionX.ray.direction.copy(pointerlock.getDirection());
+                // var intersect = collisionX.intersectObjects(objects);
+                // isOnObjectX = intersect.length > 0;
+                //
+                // var collisionMX = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 5);
+                // collisionMX.ray.origin.copy(pointerlock.getObject().position);
+                // collisionMX.ray.direction.copy(pointerlock.getDirection());
+                // collisionMX.ray.direction.x = -collisionMX.ray.direction.x;
+                // intersect = collisionMX.intersectObjects(objects);
+                // isOnObjectMX = intersect.length > 0;
+
+                // var collisionZ = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 100);
+
+            // }
+
+
 
             var time = performance.now();
             var delta = (time - prevTime) / 1000;
@@ -104,7 +137,7 @@ THREE.Controls = function(document) {
             velocity.x -= velocity.x * 10.0 * delta;
             velocity.z -= velocity.z * 10.0 * delta;
 
-            velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+            velocity.y -= 9.8 * mass * delta; // 100.0 = mass
 
             if (moveForward) velocity.z -= 400.0 * delta * speed;
             if (moveBackward) velocity.z += 400.0 * delta * speed;
