@@ -4,10 +4,11 @@ var geometry, material, mesh;
 var objects = [];
 
 var mouselock, controls, pointerlock;
-
+var player;
 
 var controlsEnabled = false;
 
+var aux = false;
 
 
 if (Detector.webgl) {
@@ -36,8 +37,14 @@ function init() {
     scene.add(light);
 
 
+
+    //Player
+    player = new Player();
+
     //controls
     controls = new THREE.Controls(document);
+
+
 
     // floor
 
@@ -130,6 +137,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     controls.update();
+    player.update();
 
     renderer.render(scene, camera);
 
