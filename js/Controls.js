@@ -157,6 +157,13 @@ THREE.Controls = function(document) {
             var intersect = collisionE.intersectObjects(objects);
             isOnObjectE = intersect.length > 0;
 
+            var nordest = new THREE.Vector3(1, 0, -1);
+            nordest.z = nord.x+est.z;
+            nordest.x = nord.z + est.x;
+            var collisionNE = new THREE.Raycaster(pointerlock.getObject().position, nordest, 0, 10);
+            var intersect = collisionNE.intersectObjects(objects);
+            isOnObjectNE = intersect.length > 0;
+
             var ovest = new THREE.Vector3(-1, 0, 0);
             ovest.z = -nord.x;
             ovest.x = nord.z;
@@ -191,8 +198,12 @@ THREE.Controls = function(document) {
 
             if (moveForward) {
 
-                if (isOnObjectN) velocity.z = 0;
-                else velocity.z -= 400.0 * delta * speed;
+
+                if (isOnObjectNE) velocity.x -= 400.0 * delta * speed;
+                else{
+                    if (isOnObjectN) velocity.z = 0;                    
+                    else velocity.z -= 400.0 * delta * speed;
+                }
             }
             if (moveBackward) {
 
