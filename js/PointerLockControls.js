@@ -46,7 +46,7 @@ THREE.PointerLockControls = function(camera) {
         return yawObject;
 
     };
-    
+
 
 
     this.getDirection = function() {

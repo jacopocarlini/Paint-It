@@ -8,7 +8,6 @@ var player;
 
 var controlsEnabled = false;
 
-var aux = false;
 
 
 if (Detector.webgl) {
@@ -24,8 +23,8 @@ if (Detector.webgl) {
 
 function init() {
     //camera
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.y = 10;
+    camera = new THREE.PerspectiveCamera(75, (window.innerWidth / window.innerHeight), 1, 1000);
+    camera.position.y = 0;
 
     //scene
     scene = new THREE.Scene();
@@ -74,6 +73,11 @@ function init() {
     });
 
     mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.y = 400;
+    mesh.rotation.x=Math.PI;
     scene.add(mesh);
 
     // objects
