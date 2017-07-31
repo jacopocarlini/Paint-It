@@ -20,7 +20,6 @@ THREE.Controls = function(document) {
 
     var onKeyDown = function(event) {
 
-
         switch (event.keyCode) {
 
             case 38: // up
@@ -103,6 +102,20 @@ THREE.Controls = function(document) {
 
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
+    var leftClick = function(event){
+        if(event.button==0){
+            console.log("lefttClick");
+            var nord = new THREE.Vector3(0, 0, -1);
+            nord.x = pointerlock.getDirection().x;
+            nord.z = pointerlock.getDirection().z;
+            var collisionO = new THREE.Raycaster(pointerlock.getObject().position, nord, 0, 100);
+            var intersect = collisionO.intersectObjects(objects);
+            if (intersect.length>0) intersect[0].color();
+        }
+        if(event.button==2)
+            console.log("rightClick");
+    }
+    document.addEventListener('mousedown', leftClick);
 
     var raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 100);
 
@@ -117,12 +130,13 @@ THREE.Controls = function(document) {
             var isOnObject = false;
             var dir;
 
+            var time = performance.now();
+            var delta = (time - prevTime) / 1000;
+
             collision.compute();
 
 
 
-            var time = performance.now();
-            var delta = (time - prevTime) / 1000;
 
             velocity.x -= velocity.x * 10.0 * delta;
             velocity.z -= velocity.z * 10.0 * delta;
@@ -130,25 +144,31 @@ THREE.Controls = function(document) {
             else{velocity.y += 9.8 * mass * delta; }// 100.0 = mass
 
             if (moveForward) {
-                if (collision.getNord()){
-                    velocity.z = 0;
-                    // pointerlock.position.z = intersect1[0].position.z;
-                //  console.log(intersect1[0]);
-                }
-                else{ velocity.z -= 400.0 * delta * speed;}
+                if(collision.getNord()) velocity.z = 0;
+                else    if (collision.getNordOvest()) velocity.x += 400.0 * delta * speed;
+                        else    if (collision.getNordEst()) velocity.x -= 400.0 * delta * speed;
+                                else velocity.z -= 400.0 * delta * speed;
             }
             if (moveBackward) {
-
-                if (collision.getSud()){ velocity.z = 0;}
-                else{ velocity.z += 400.0 * delta * speed;}
+                if(collision.getSud()) velocity.z = 0;
+                else    if (collision.getSudOvest()) velocity.x -= 400.0 * delta * speed;
+                        else    if (collision.getSudEst()) velocity.x += 400.0 * delta * speed;
+                                else velocity.z += 400.0 * delta * speed;
             }
             if (moveLeft) {
-                if (collision.getOvest()){ velocity.x = 0;}
-                else { velocity.x -= 400.0 * delta * speed;}
+                if(collision.getOvest()) velocity.x = 0;
+                else    if (collision.getNordOvest()) velocity.z += 400.0 * delta * speed;
+                        else    if (collision.getSudOvest()) velocity.z -= 400.0 * delta * speed;
+                                else velocity.x -= 400.0 * delta * speed;
+
             }
             if (moveRight) {
-                if (collision.getEst()){ velocity.x = 0;}
-                else{velocity.x += 400.0 * delta * speed;}
+                if(collision.getEst()) velocity.x = 0;
+                else    if (collision.getNordEst()) velocity.z += 400.0 * delta * speed;
+                        else    if (collision.getSudOvest()) velocity.z -= 400.0 * delta * speed;
+                                else velocity.x += 400.0 * delta * speed;
+
+
             }
 
             if(gravity==0){
