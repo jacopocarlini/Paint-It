@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8>
+	<title>My first three.js app</title>
+</head>
+
+
+
+<body>
+	<div id="index">
+		Welcome into Lobby!
+        <form action="" id="form">
+      <input id="username" autocomplete="off" /><button>Send</button>
+    </form>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+	<script>
+	var socket = io();
+    $('form').submit(function(){
+        socket.emit('new player',  $('#username').val());
+        $('#form').html("waiting for an opponent...");
+        socket.on('enemy found', function(data){
+			$('#index').html(data);
+            // window.location.replace("http://localhost:3000/main");
+        });
+        return false;
+    });
+	</script>
+</body>
+
+</html>
