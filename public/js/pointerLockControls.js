@@ -31,23 +31,20 @@ THREE.PointerLockControls = function(camera) {
 
     };
 
-    this.dispose = function() {
-
-        document.removeEventListener('mousemove', onMouseMove, false);
-
-    };
 
     document.addEventListener('mousemove', onMouseMove, false);
 
     this.enabled = false;
+
+    this.dispose = function() {
+        document.removeEventListener('mousemove', onMouseMove, false);
+    };
 
     this.getObject = function() {
 
         return yawObject;
 
     };
-
-
 
     this.getDirection = function() {
 
@@ -59,7 +56,7 @@ THREE.PointerLockControls = function(camera) {
         return function(v) {
 
             rotation.set(pitchObject.rotation.x, yawObject.rotation.y, 0);
-			v = new THREE.Vector3();
+            v = new THREE.Vector3();
             v.copy(direction).applyEuler(rotation);
 
             return v;
@@ -68,4 +65,13 @@ THREE.PointerLockControls = function(camera) {
 
     };
 
+    this.setOppositeDirection = function() {
+        var movementX = 1600;
+        var movementY = 0;
+
+        yawObject.rotation.y -= movementX * 0.002;
+        pitchObject.rotation.x -= movementY * 0.002;
+
+        pitchObject.rotation.x = Math.max(-PI_2, Math.min(PI_2, pitchObject.rotation.x));
+    }
 };

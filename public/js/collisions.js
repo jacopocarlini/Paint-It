@@ -1,4 +1,4 @@
-Collisions = function(){
+Collisions = function() {
     var isOnObjectN = false;
     var isOnObjectS = false;
     var isOnObjectE = false;
@@ -15,40 +15,40 @@ Collisions = function(){
     var d = 9;
     var p = 0;
 
-    this.getNord = function(){
+    this.getNord = function() {
         return isOnObjectN;
     }
-    this.getSud = function(){
+    this.getSud = function() {
         return isOnObjectS;
     }
-    this.getEst = function(){
+    this.getEst = function() {
         return isOnObjectE;
     }
-    this.getOvest = function(){
+    this.getOvest = function() {
         return isOnObjectO;
     }
-    this.getGiu = function(){
+    this.getGiu = function() {
         return isOnObjectG;
     }
-    this.getUp = function(){
+    this.getUp = function() {
         return isOnObjectU;
     }
 
-    this.getNordEst = function(){
+    this.getNordEst = function() {
         return isOnObjectNE;
     }
-    this.getSudEst = function(){
+    this.getSudEst = function() {
         return isOnObjectSE;
     }
-    this.getNordOvest = function(){
+    this.getNordOvest = function() {
         return isOnObjectNO;
     }
-    this.getSudOvest = function(){
+    this.getSudOvest = function() {
         return isOnObjectSO;
     }
 
 
-    this.compute = function(){
+    this.compute = function() {
         isOnObjectN = false;
         isOnObjectS = false;
         isOnObjectE = false;

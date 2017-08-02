@@ -17,6 +17,7 @@ THREE.MouseLock = function(){
 
                 controlsEnabled = true;
                 pointerlock.enabled = true;
+                socket.emit("ready");
 
                 blocker.style.display = 'none';
 

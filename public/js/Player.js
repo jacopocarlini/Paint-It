@@ -1,4 +1,5 @@
-Player = function() {
+Player = function(data) {
+    var p1 = data.p1;
     var x, y, z;
     var h, w, d;
 
@@ -62,11 +63,10 @@ Player = function() {
 
 
     var playermesh = new THREE.Mesh(geometry, material);
-    playermesh.position.x = 0;
-    playermesh.position.y = 0;
-    playermesh.position.z = 0;
+    playermesh.position.x = data.player.position.x;
+    playermesh.position.y = data.player.position.y;
+    playermesh.position.z = data.player.position.z;
 
-    // playermesh.rotation.y=Math.PI/4;
 
     scene.add(playermesh);
 
@@ -109,22 +109,41 @@ Player = function() {
 
 
 
-    this.update = function() {
-        playermesh.position.x = pointerlock.getObject().position.x;
-        playermesh.position.y = pointerlock.getObject().position.y;
-        playermesh.position.z = pointerlock.getObject().position.z;
+    this.update = function(data) {
+        if(p1){
+            playermesh.position.x = pointerlock.getObject().position.x;
+            playermesh.position.y = pointerlock.getObject().position.y;
+            playermesh.position.z = pointerlock.getObject().position.z;
 
 
 
 
-        var v1 = new THREE.Vector2(pointerlock.getDirection().x, pointerlock.getDirection().z);
-        playermesh.rotation.y =- v1.angle();
-        var v2 = new THREE.Vector2(pointerlock.getDirection().y, pointerlock.getDirection().z);
-        playermesh.rotation.z = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
-        /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
+            var v1 = new THREE.Vector2(pointerlock.getDirection().x, pointerlock.getDirection().z);
+            playermesh.rotation.y =- v1.angle();
+            var v2 = new THREE.Vector2(pointerlock.getDirection().y, pointerlock.getDirection().z);
+            playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
+            /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
 
-        // this.collision();
+            // this.collision();
+        }
+        else{
 
+            playermesh.position.x = data.position.x;
+            playermesh.position.y = data.position.y;
+            playermesh.position.z = data.position.z;
+
+
+
+
+            var v1 = new THREE.Vector2(data.direction.x, data.direction.z);
+            playermesh.rotation.y =- v1.angle();
+            var v2 = new THREE.Vector2(data.direction.y, data.direction.z);
+            playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
+            /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
+
+            // this.collision();
+
+        }
 
     }
 
