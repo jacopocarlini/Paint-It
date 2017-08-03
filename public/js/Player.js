@@ -3,7 +3,7 @@ Player = function(data) {
     var x, y, z;
     var h, w, d;
 
-    var geometry = new THREE.BoxGeometry(5, 5, 5);
+    var geometry = new THREE.BoxGeometry(20, 20, 20);
     for (var i = 0, l = geometry.faces.length; i < l; i++) {
 
         var face = geometry.faces[i];
@@ -68,29 +68,23 @@ Player = function(data) {
     playermesh.position.y = data.player.position.y;
     playermesh.position.z = data.player.position.z;
 
+    var material = new THREE.MeshBasicMaterial({
+        color: 0xffff00
+    });
 
     scene.add(playermesh);
 
-    var sightgeometry = new THREE.Geometry();
-
+    var sightgeometry = new THREE.SphereGeometry(0.01, 32, 32);
+    var sightmaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000
+    });
     var nord = new THREE.Vector3(0, 0, -1);
     nord.x = pointerlock.getDirection().x;
     nord.z = pointerlock.getDirection().z;
-
-    var star = new THREE.Vector3();
-    star.x = pointerlock.getObject().position.x + nord.x;
-    star.y = pointerlock.getObject().position.y + nord.y;
-    star.z = pointerlock.getObject().position.z + nord.z;
-
-    sightgeometry.vertices.push(star)
-
-
-
-    var sightmaterial = new THREE.PointsMaterial({
-        color: 0x888888
-    })
-
-    var sight = new THREE.Points(sightgeometry, sightmaterial);
+    var sight = new THREE.Mesh(sightgeometry, sightmaterial);
+    // sight.position.x = pointerlock.getObject().position.x + (nord.x * 2);
+    // sight.position.y = pointerlock.getObject().position.y + (nord.y * 2);
+    // sight.position.z = pointerlock.getObject().position.z + (nord.z * 2);
 
     scene.add(sight);
 
@@ -130,8 +124,6 @@ Player = function(data) {
     }
 
 
-
-
     this.update = function(data) {
         if (p1) {
             playermesh.position.x = pointerlock.getObject().position.x;
@@ -148,9 +140,14 @@ Player = function(data) {
             /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
 
             // this.collision();
-            // sight.position.x = pointerlock.getObject().position.x + nord.x;
-            // sight.position.y = pointerlock.getObject().position.y + nord.y;
-            // sight.position.z = pointerlock.getObject().position.z + nord.z;
+
+            nord.x = pointerlock.getDirection().x;
+            nord.y = pointerlock.getDirection().y;
+            nord.z = pointerlock.getDirection().z;
+            sight.position.x = pointerlock.getObject().position.x + (nord.x*2);
+            sight.position.y = pointerlock.getObject().position.y + (nord.y*2);
+            sight.position.z = pointerlock.getObject().position.z + (nord.z*2);
+
         } else {
 
             playermesh.position.x = data.position.x;

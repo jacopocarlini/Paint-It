@@ -109,10 +109,11 @@ Controls = function(document) {
 
     var leftClick = function(event) {
         if (event.button == 0) {
-            console.log("lefttClick");
-            var bullet = new Bullet();
+            // console.log("lefttClick");
+            var bullet = new Bullet(bullets.length);
             bullets.push(bullet);
             bullet.addBullet();
+
             // console.log(pointerlock.getObject().position);
             // console.log(pointerlock.getDirection());
             // var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);

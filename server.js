@@ -90,6 +90,10 @@ function addEventListener(player1, player2) {
         socket2.emit("data", data);
     });
 
+    socket1.on("hit", function(data) {
+        socket2.emit("hit", data);
+    });
+
     socket1.on("disconnect", function(){
         console.log("disconnect");
         ingame.splice(ingame.indexOf(player1), 1);
@@ -107,7 +111,7 @@ function startMatch(player1, player2) {
             "position": {
                 "x": 0,
                 "y": 10,
-                "z": 50
+                "z": 350
             },
             "direction": -1
         },
@@ -115,7 +119,7 @@ function startMatch(player1, player2) {
             "position": {
                 "x": 0,
                 "y": 10,
-                "z": -50
+                "z": -350
             },
             "direction": 1
         },

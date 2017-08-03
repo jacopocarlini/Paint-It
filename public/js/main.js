@@ -6,6 +6,7 @@ var objects = [];
 var mouselock, controls, pointerlock;
 var player, enemy, bullets = [];
 
+
 var controlsEnabled = false;
 var ready = true;
 var socket = socket;
@@ -32,7 +33,7 @@ if (Detector.webgl) {
                 "position": {
                     "x": 0,
                     "y": 10,
-                    "z": 50
+                    "z": 350
                 },
                 "direction": -1
             },
@@ -40,7 +41,7 @@ if (Detector.webgl) {
                 "position": {
                     "x": 0,
                     "y": 10,
-                    "z": -50
+                    "z": -350
                 },
                 "direction": 1
             },
@@ -64,7 +65,7 @@ function init(data) {
 
     //scene
     scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0xffffff, 0, 750);
+    // scene.fog = new THREE.Fog(0xffffff, 0, 1000);
 
     //light
     var light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
@@ -98,84 +99,8 @@ function init(data) {
     enemy = new Player(p2);
 
 
+    var map = new Map();
 
-    // floor
-
-    geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
-    geometry.rotateX(-Math.PI / 2);
-
-    for (var i = 0, l = geometry.vertices.length; i < l; i++) {
-
-        var vertex = geometry.vertices[i];
-        vertex.x += Math.random() * 20 - 10;
-        vertex.y += Math.random() * 2;
-        vertex.z += Math.random() * 20 - 10;
-
-    }
-
-    for (var i = 0, l = geometry.faces.length; i < l; i++) {
-
-        var face = geometry.faces[i];
-        face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-
-    }
-
-    material = new THREE.MeshBasicMaterial({
-        vertexColors: THREE.VertexColors
-    });
-
-    mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 400;
-    mesh.rotation.x = Math.PI;
-    scene.add(mesh);
-
-
-
-    // objects
-
-    geometry = new THREE.BoxGeometry(20, 20, 20);
-
-    for (var i = 0, l = geometry.faces.length; i < l; i++) {
-
-        var face = geometry.faces[i];
-        face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-
-    }
-
-
-
-    // var mesh = new THREE.Mesh(geometry, material);
-    // mesh.position.x = 0;
-    // mesh.position.y = 10;
-    // mesh.position.z = 100;
-    // scene.add(mesh);
-    // objects.push(mesh);
-
-    for (var i = 0; i < 500; i++) {
-        material = new THREE.MeshPhongMaterial({
-            specular: 0xffffff,
-            shading: THREE.FlatShading,
-            vertexColors: THREE.VertexColors
-        });
-
-        var mesh = new THREE.Mesh(geometry, material);
-        mesh.position.x = Math.floor(Math.random() * 20 - 10) * 20;
-        mesh.position.y = Math.floor(Math.random() * 20) * 20 + 10;
-        mesh.position.z = Math.floor(Math.random() * 20 - 10) * 20;
-        scene.add(mesh);
-
-        material.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-
-        objects.push(mesh);
-
-    }
 
 
     //renderer
@@ -200,6 +125,10 @@ function onWindowResize() {
 
 }
 
+function remove(id) {
+  scene.remove(scene.getObjectByName(id));
+}
+
 function animate() {
 
     requestAnimationFrame(animate);
@@ -209,11 +138,26 @@ function animate() {
         player.update();
         for (var i = 0; i < bullets.length; i++) {
             bullets[i].update();
-            bullets[i].collision();
+            if (bullets[i].collision()){
+
+                remove(i);
+                bullets.splice(i, 1);
+            }
+            else if(bullets[i].hit()) {
+                console.log("hit");
+                ready=false;
+                remove(i);
+                bullets.splice(i, 1);
+                if(socket) socket.emit("hit");
+            }
+
         }
         if(socket){
             socket.on("data", function(data) {
                 enemy.update(data.player);
+            });
+            socket.on("hit", function() {
+                ready = false;
             });
         }
 
