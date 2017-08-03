@@ -91,10 +91,11 @@ function addEventListener(player1, player2) {
     });
 
     socket1.on("disconnect", function(){
+        console.log("disconnect");
         ingame.splice(ingame.indexOf(player1), 1);
         ingame.splice(ingame.indexOf(player2), 1);
-        pending.push(player2);
-        sockets.splice(socket.indexOf(socket1), 1);
+        pendings.push(player2);
+        sockets.splice(sockets.indexOf(socket1), 1);
     });
 }
 

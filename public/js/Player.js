@@ -22,6 +22,7 @@ Player = function(data) {
 
     // Rotate an object around an arbitrary axis in object space
     var rotObjectMatrix;
+
     function rotateAroundObjectAxis(object, axis, radians) {
         rotObjectMatrix = new THREE.Matrix4();
         rotObjectMatrix.makeRotationAxis(axis.normalize(), radians);
@@ -48,7 +49,7 @@ Player = function(data) {
         // old code for Three.JS pre r54:
         //  rotWorldMatrix.multiply(object.matrix);
         // new code for Three.JS r55+:
-        rotWorldMatrix.multiply(object.matrix);                // pre-multiply
+        rotWorldMatrix.multiply(object.matrix); // pre-multiply
 
         object.matrix = rotWorldMatrix;
 
@@ -70,22 +71,47 @@ Player = function(data) {
 
     scene.add(playermesh);
 
+    var sightgeometry = new THREE.Geometry();
+
+    var nord = new THREE.Vector3(0, 0, -1);
+    nord.x = pointerlock.getDirection().x;
+    nord.z = pointerlock.getDirection().z;
+
+    var star = new THREE.Vector3();
+    star.x = pointerlock.getObject().position.x + nord.x;
+    star.y = pointerlock.getObject().position.y + nord.y;
+    star.z = pointerlock.getObject().position.z + nord.z;
+
+    sightgeometry.vertices.push(star)
+
+
+
+    var sightmaterial = new THREE.PointsMaterial({
+        color: 0x888888
+    })
+
+    var sight = new THREE.Points(sightgeometry, sightmaterial);
+
+    scene.add(sight);
+
+
+
     material.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
 
-    this.getGeometry=function(){
+    this.getGeometry = function() {
         return geometry;
     }
-    this.getMesh=function(){
+    this.getMesh = function() {
         return playermesh;
     }
-    this.getPosition=function(){
+    this.getPosition = function() {
         return playermesh.position;
     }
-    this.getRotation=function(){
+    this.getRotation = function() {
         return playermesh.rotation;
     }
 
-    this.collision=function(){
+    this.collision = function() {
         for (var vertexIndex = 0; vertexIndex < playermesh.geometry.vertices.length; vertexIndex++) {
             var localVertex = playermesh.geometry.vertices[vertexIndex].clone();
             // var globalVertex = playermesh.matrix.multiplyVector3(localVertex);
@@ -106,11 +132,8 @@ Player = function(data) {
 
 
 
-
-
-
     this.update = function(data) {
-        if(p1){
+        if (p1) {
             playermesh.position.x = pointerlock.getObject().position.x;
             playermesh.position.y = pointerlock.getObject().position.y;
             playermesh.position.z = pointerlock.getObject().position.z;
@@ -119,14 +142,16 @@ Player = function(data) {
 
 
             var v1 = new THREE.Vector2(pointerlock.getDirection().x, pointerlock.getDirection().z);
-            playermesh.rotation.y =- v1.angle();
+            playermesh.rotation.y = -v1.angle();
             var v2 = new THREE.Vector2(pointerlock.getDirection().y, pointerlock.getDirection().z);
             playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
             /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
 
             // this.collision();
-        }
-        else{
+            // sight.position.x = pointerlock.getObject().position.x + nord.x;
+            // sight.position.y = pointerlock.getObject().position.y + nord.y;
+            // sight.position.z = pointerlock.getObject().position.z + nord.z;
+        } else {
 
             playermesh.position.x = data.position.x;
             playermesh.position.y = data.position.y;
@@ -136,12 +161,14 @@ Player = function(data) {
 
 
             var v1 = new THREE.Vector2(data.direction.x, data.direction.z);
-            playermesh.rotation.y =- v1.angle();
+            playermesh.rotation.y = -v1.angle();
             var v2 = new THREE.Vector2(data.direction.y, data.direction.z);
             playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
             /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
 
             // this.collision();
+
+
 
         }
 

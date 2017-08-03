@@ -1,4 +1,4 @@
-THREE.MouseLock = function(){
+MouseLock = function(){
 
     var blocker = document.getElementById('blocker');
     var instructions = document.getElementById('instructions');
@@ -17,7 +17,7 @@ THREE.MouseLock = function(){
 
                 controlsEnabled = true;
                 pointerlock.enabled = true;
-                socket.emit("ready");
+                if (socket) socket.emit("ready");
 
                 blocker.style.display = 'none';
 

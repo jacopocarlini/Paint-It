@@ -4,27 +4,52 @@ var geometry, material, mesh;
 var objects = [];
 
 var mouselock, controls, pointerlock;
-var player, enemy;
+var player, enemy, bullets = [];
 
 var controlsEnabled = false;
 var ready = true;
-
+var socket = socket;
 // var sendData = new SendData();
 
 
 if (Detector.webgl) {
+    if(socket){
+        socket.on("start match", function(data) {
+            console.log("start match");
 
-    socket.on("start match", function(data) {
-        console.log("start match");
+            mouselock = new MouseLock();
+            init(data);
+            animate();
+            socket.on("ready", function(){
+                ready = true;
+            });
 
-        mouselock = new THREE.MouseLock();
+        });
+    }
+    else{
+        var data = {
+            "player": {
+                "position": {
+                    "x": 0,
+                    "y": 10,
+                    "z": 50
+                },
+                "direction": -1
+            },
+            "enemy": {
+                "position": {
+                    "x": 0,
+                    "y": 10,
+                    "z": -50
+                },
+                "direction": 1
+            },
+            "objects": {}
+        };
+        mouselock = new MouseLock();
         init(data);
         animate();
-        socket.on("ready", function(){
-            ready = true;
-        });
-
-    });
+    }
 
 
 } else {
@@ -51,7 +76,7 @@ function init(data) {
 
 
     //controls
-    controls = new THREE.Controls(document);
+    controls = new Controls(document);
     pointerlock.getObject().position.x = data.player.position.x;
     pointerlock.getObject().position.y = data.player.position.y;
     pointerlock.getObject().position.z = data.player.position.z;
@@ -109,8 +134,7 @@ function init(data) {
     mesh.rotation.x = Math.PI;
     scene.add(mesh);
 
-    var axisHelper = new THREE.AxisHelper( 5 );
-scene.add( axisHelper );
+
 
     // objects
 
@@ -183,9 +207,15 @@ function animate() {
     if(ready){
         controls.update();
         player.update();
-        socket.on("data", function(data) {
-            enemy.update(data.player);
-        });
+        for (var i = 0; i < bullets.length; i++) {
+            bullets[i].update();
+            bullets[i].collision();
+        }
+        if(socket){
+            socket.on("data", function(data) {
+                enemy.update(data.player);
+            });
+        }
 
 
         var data = {
@@ -202,8 +232,7 @@ function animate() {
                 }
             }
         };
-
-        socket.emit("data", data);
+        if(socket)  socket.emit("data", data);
     }
     renderer.render(scene, camera);
 

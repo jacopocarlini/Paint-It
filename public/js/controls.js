@@ -1,4 +1,4 @@
-THREE.Controls = function(document) {
+Controls = function(document) {
     var moveForward = false;
     var moveBackward = false;
     var moveLeft = false;
@@ -105,14 +105,19 @@ THREE.Controls = function(document) {
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
 
+
+
     var leftClick = function(event) {
         if (event.button == 0) {
             console.log("lefttClick");
-            console.log(pointerlock.getObject().position);
-            console.log(pointerlock.getDirection());
-            var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
-            var objhit = hit.intersectObjects(objects);
-            if (objhit.length > 0) objhit[0].object.material.color.set(0xff0000);
+            var bullet = new Bullet();
+            bullets.push(bullet);
+            bullet.addBullet();
+            // console.log(pointerlock.getObject().position);
+            // console.log(pointerlock.getDirection());
+            // var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
+            // var objhit = hit.intersectObjects(objects);
+            // if (objhit.length > 0) objhit[0].object.material.color.set(0xff0000);
         }
         if (event.button == 2) {
             console.log("rightClick");
