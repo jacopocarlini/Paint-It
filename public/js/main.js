@@ -2,7 +2,7 @@ var camera, scene, renderer, mouse = new THREE.Vector2();
 
 var geometry, material, mesh;
 var objects = [];
-
+var floors = [];
 var mouselock, controls, pointerlock;
 var player, enemy, bullets = [];
 
@@ -11,23 +11,34 @@ var controlsEnabled = false;
 var ready = true;
 var socket = socket;
 // var sendData = new SendData();
+var click = false;
+
+
+function generateMap(){
+
+    var arr = []
+    while(arr.length < 100){
+        var randomnumber = Math.ceil(Math.random()*100)
+        if(arr.indexOf(randomnumber) > -1) continue;
+        arr[arr.length] = randomnumber;
+    }
+}
 
 
 if (Detector.webgl) {
-    if(socket){
+    if (socket) {
         socket.on("start match", function(data) {
             console.log("start match");
 
             mouselock = new MouseLock();
             init(data);
             animate();
-            socket.on("ready", function(){
+            socket.on("ready", function() {
                 ready = true;
             });
 
         });
-    }
-    else{
+    } else {
         var data = {
             "player": {
                 "position": {
@@ -45,10 +56,37 @@ if (Detector.webgl) {
                 },
                 "direction": 1
             },
-            "objects": {}
+            "objects": [{
+                    "type": "cross",
+                    "position": {
+                        "x": 0,
+                        "y": 10,
+                        "z": -350
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    }
+                },
+                {
+                    "type": "h_form",
+                    "position": {
+                        "x": 0,
+                        "y": 100,
+                        "z": 150
+                    },
+                    "rotation": {
+                        "x": 0,
+                        "y": 0,
+                        "z": 0
+                    }
+                }
+            ]
         };
-        mouselock = new MouseLock();
         init(data);
+        mouselock = new MouseLock();
+
         animate();
     }
 
@@ -99,7 +137,7 @@ function init(data) {
     enemy = new Player(p2);
 
 
-    var map = new Map();
+    var map = new Map(data.objects);
 
 
 
@@ -126,33 +164,33 @@ function onWindowResize() {
 }
 
 function remove(id) {
-  scene.remove(scene.getObjectByName(id));
+    scene.remove(scene.getObjectByName(id));
 }
 
 function animate() {
 
     requestAnimationFrame(animate);
 
-    if(ready){
+    if (true) {
         controls.update();
         player.update();
         for (var i = 0; i < bullets.length; i++) {
             bullets[i].update();
-            if (bullets[i].collision()){
-
-                remove(i);
+            if (bullets[i].collision()) {
+                // console.log("coll");
+                scene.remove(bullets[i].getMesh());
                 bullets.splice(i, 1);
-            }
-            else if(bullets[i].hit()) {
-                console.log("hit");
-                ready=false;
-                remove(i);
+            } else if (bullets[i].hit()) {
+                // console.log("hit");
+                ready = false;
+                // remove(i);
+                scene.remove(bullets[i].getMesh());
                 bullets.splice(i, 1);
-                if(socket) socket.emit("hit");
+                if (socket) socket.emit("hit");
             }
 
         }
-        if(socket){
+        if (socket) {
             socket.on("data", function(data) {
                 enemy.update(data.player);
             });
@@ -176,7 +214,7 @@ function animate() {
                 }
             }
         };
-        if(socket)  socket.emit("data", data);
+        if (socket) socket.emit("data", data);
     }
     renderer.render(scene, camera);
 

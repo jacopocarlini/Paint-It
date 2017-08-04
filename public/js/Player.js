@@ -130,7 +130,7 @@ Player = function(data) {
             playermesh.position.y = pointerlock.getObject().position.y;
             playermesh.position.z = pointerlock.getObject().position.z;
 
-
+            // console.log(playermesh.position);
 
 
             var v1 = new THREE.Vector2(pointerlock.getDirection().x, pointerlock.getDirection().z);

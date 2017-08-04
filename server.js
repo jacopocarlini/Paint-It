@@ -44,21 +44,6 @@ io.on('connection', function(socket) {
 
             addEventListener(player1, player2);
             addEventListener(player2, player1);
-            // var ready = 0;
-            // player1.socket.on("ready", function() {
-            //     ready += 1;
-            //     if(ready==2){
-            //         player1.socket.emit("ready");
-            //         player2.socket.emit("ready");
-            //     }
-            // });
-            // player2.socket.on("ready", function() {
-            //     ready += 1;
-            //     if(ready==2){
-            //         player1.socket.emit("ready");
-            //         player2.socket.emit("ready");
-            //     }
-            // });
 
             startMatch(player1.socket, player2.socket);
         }
@@ -123,7 +108,7 @@ function startMatch(player1, player2) {
             },
             "direction": 1
         },
-        "objects": {}
+        "map": {}
     };
     var data2 = {
         "player": {
@@ -142,10 +127,10 @@ function startMatch(player1, player2) {
             },
             "direction": -1
         },
-        "objects": {}
+        "map": {}
     };
 
-
+    for(var i =0 ; i< 100; i++){}
     player1.emit("start match", data1);
     player2.emit("start match", data2);
 }

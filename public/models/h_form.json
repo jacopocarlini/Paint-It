@@ -1,0 +1,112 @@
+{
+    "metadata": {
+        "version": 4.5,
+        "type": "Object",
+        "generator": "Object3D.toJSON"
+    },
+    "geometries": [{
+            "uuid": "BD159293-A250-407D-A33B-6D41E7C0D6AD",
+            "type": "BoxGeometry",
+            "width": 100,
+            "height": 20,
+            "depth": 100,
+            "widthSegments": 0,
+            "heightSegments": 0,
+            "depthSegments": 0
+        },
+        {
+            "uuid": "E0B55A64-9589-4AEB-B20E-1540EBACE7AB",
+            "type": "BoxGeometry",
+            "width": 100,
+            "height": 100,
+            "depth": 20,
+            "widthSegments": 0,
+            "heightSegments": 0,
+            "depthSegments": 0
+        },
+        {
+            "uuid": "16C93404-43AA-48AF-978A-E4D2B370CEE1",
+            "type": "BoxGeometry",
+            "width": 100,
+            "height": 100,
+            "depth": 20,
+            "widthSegments": 0,
+            "heightSegments": 0,
+            "depthSegments": 0
+        }
+    ],
+    "materials": [{
+            "uuid": "7231FB8B-9E58-471A-A1C0-06EB43751090",
+            "type": "MeshStandardMaterial",
+            "color": 16777215,
+            "roughness": 0.5,
+            "metalness": 0.5,
+            "emissive": 0,
+            "depthFunc": 3,
+            "depthTest": true,
+            "depthWrite": true,
+            "skinning": false,
+            "morphTargets": false,
+            "dithering": false
+        },
+        {
+            "uuid": "A36E11D9-381E-4E37-8521-475912AAD6A5",
+            "type": "MeshStandardMaterial",
+            "color": 16777215,
+            "roughness": 0.5,
+            "metalness": 0.5,
+            "emissive": 0,
+            "depthFunc": 3,
+            "depthTest": true,
+            "depthWrite": true,
+            "skinning": false,
+            "morphTargets": false,
+            "dithering": false
+        },
+        {
+            "uuid": "4609316B-76E6-4408-B3FC-D5FF9F6980A8",
+            "type": "MeshStandardMaterial",
+            "color": 16777215,
+            "roughness": 0.5,
+            "metalness": 0.5,
+            "emissive": 0,
+            "depthFunc": 3,
+            "depthTest": true,
+            "depthWrite": true,
+            "skinning": false,
+            "morphTargets": false,
+            "dithering": false
+        }
+    ],
+    "object": {
+        "uuid": "1F0B3CBD-2BAC-478E-B6D5-74CA2EF5A5A3",
+        "type": "Group",
+        "name": "h_form",
+        "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+        "children": [{
+                "uuid": "AEBE70AD-89D6-480C-A58B-BAB591E2D818",
+                "type": "Mesh",
+                "name": "Box Horizontal",
+                "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                "geometry": "BD159293-A250-407D-A33B-6D41E7C0D6AD",
+                "material": "7231FB8B-9E58-471A-A1C0-06EB43751090"
+            },
+            {
+                "uuid": "DA8E93B2-3593-4920-B1B4-168622C66A20",
+                "type": "Mesh",
+                "name": "Box Vertical High",
+                "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 60, 1],
+                "geometry": "E0B55A64-9589-4AEB-B20E-1540EBACE7AB",
+                "material": "A36E11D9-381E-4E37-8521-475912AAD6A5"
+            },
+            {
+                "uuid": "A1044197-2040-4B2B-BDA4-8F1F527597C3",
+                "type": "Mesh",
+                "name": "Box Vertical Low",
+                "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, -60, 1],
+                "geometry": "16C93404-43AA-48AF-978A-E4D2B370CEE1",
+                "material": "4609316B-76E6-4408-B3FC-D5FF9F6980A8"
+            }
+        ]
+    }
+}

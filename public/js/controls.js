@@ -7,10 +7,11 @@ Controls = function(document) {
     var gravity = 0;
     var prevTime = performance.now();
     var velocity = new THREE.Vector3();
-    var speed = 1.0;
+    var speed = 2.0;
     var mass = 100.0;
 
     var altezza = 10;
+    var id=-1;
 
 
     var collision = new Collisions();
@@ -53,7 +54,7 @@ Controls = function(document) {
                 break;
 
             case 16: // shift
-                speed = 3.0;
+                speed = 4.0;
                 break;
 
             case 69: // E
@@ -95,7 +96,7 @@ Controls = function(document) {
                 break;
 
             case 16: // shift
-                speed = 1.0;
+                speed = 2.0;
                 break;
 
         }
@@ -108,11 +109,10 @@ Controls = function(document) {
 
 
     var leftClick = function(event) {
-        if (event.button == 0) {
+        if (event.button == 0 && click) {
             // console.log("lefttClick");
-            var bullet = new Bullet(bullets.length);
+            var bullet = new Bullet();
             bullets.push(bullet);
-            bullet.addBullet();
 
             // console.log(pointerlock.getObject().position);
             // console.log(pointerlock.getDirection());
@@ -121,10 +121,10 @@ Controls = function(document) {
             // if (objhit.length > 0) objhit[0].object.material.color.set(0xff0000);
         }
         if (event.button == 2) {
-            console.log("rightClick");
+            // console.log("rightClick");
             var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
             var objhit = hit.intersectObjects(objects);
-            if (objhit.length > 0) objhit[0].object.material.color.set(0x0000ff);
+            if (objhit.length > 0) objhit[0].object.material.color.set(0x000000);
         }
     }
     document.addEventListener('mousedown', leftClick);
@@ -222,6 +222,22 @@ Controls = function(document) {
                 velocity.y = 0;
                 pointerlock.getObject().position.y = 400 - altezza;
                 canJump = true;
+            }
+            if (pointerlock.getObject().position.x < -400 + altezza) {
+                velocity.x = 0;
+                pointerlock.getObject().position.x = -400 + altezza;
+            }
+            if (pointerlock.getObject().position.x > 400 - altezza) {
+                velocity.x = 0;
+                pointerlock.getObject().position.x = 400 - altezza;
+            }
+            if (pointerlock.getObject().position.z < -400 + altezza) {
+                velocity.z = 0;
+                pointerlock.getObject().position.z = -400 + altezza;
+            }
+            if (pointerlock.getObject().position.z > 400 - altezza) {
+                velocity.z = 0;
+                pointerlock.getObject().position.z = 400 - altezza;
             }
 
 

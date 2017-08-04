@@ -17,6 +17,7 @@ MouseLock = function(){
 
                 controlsEnabled = true;
                 pointerlock.enabled = true;
+                click = true;
                 if (socket) socket.emit("ready");
 
                 blocker.style.display = 'none';
@@ -24,6 +25,7 @@ MouseLock = function(){
             } else {
 
                 pointerlock.enabled = false;
+                click = false;
 
                 blocker.style.display = '-webkit-box';
                 blocker.style.display = '-moz-box';
