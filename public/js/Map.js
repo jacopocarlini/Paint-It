@@ -136,7 +136,9 @@ Map = function(data) {
                         });
                         obj2.children[j].material = material;
                     }
+                    // console.log(data[i].type);
                     if (data[i].type == "cross") {
+                        // console.log("qui");
                         cross = obj.clone();
 
                         cross.position.x = data[i].position.x;
@@ -165,9 +167,9 @@ Map = function(data) {
                     if (data[i].type == "plane") {
                         geometry = new THREE.BoxGeometry(100, 100, 20);
 
-                        for (var i = 0, l = geometry.faces.length; i < l; i++) {
+                        for (var j = 0, l = geometry.faces.length; j < l; j++) {
 
-                            var face = geometry.faces[i];
+                            var face = geometry.faces[j];
                             face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
                             face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
                             face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
@@ -193,6 +195,7 @@ Map = function(data) {
                         scene.add(group);
                         objects.push(group);
                     }
+
                 }
             });
 
@@ -201,7 +204,7 @@ Map = function(data) {
 
 
 
-        
+
 
 
 

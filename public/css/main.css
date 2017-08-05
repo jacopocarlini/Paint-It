@@ -15,6 +15,10 @@ canvas {
 
     background-color: rgba(0, 0, 0, 0.5);
 }
+#timer, #points {
+
+    color: #0000ff;
+}
 
 #instructions {
 

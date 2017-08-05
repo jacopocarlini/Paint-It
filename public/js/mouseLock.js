@@ -18,7 +18,7 @@ MouseLock = function(){
                 controlsEnabled = true;
                 pointerlock.enabled = true;
                 click = true;
-                if (socket) socket.emit("ready");
+                // if (socket) socket.emit("ready");
 
                 blocker.style.display = 'none';
 

@@ -153,10 +153,10 @@ Controls = function(document) {
             velocity.x -= velocity.x * 10.0 * delta;
             velocity.z -= velocity.z * 10.0 * delta;
             if (gravity == 0) {
-                velocity.y -= 9.8 * mass * delta;
+                velocity.y -= 9.0 * mass * delta;
             } // 100.0 = mass
             else {
-                velocity.y += 9.8 * mass * delta;
+                velocity.y += 9.0 * mass * delta;
             } // 100.0 = mass
 
             if (moveForward) {

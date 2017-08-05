@@ -77,7 +77,9 @@ Bullet = function() {
                 if (objhit[0].object.parent === objects[i]) {
                     for (var j = 0; j < objects[i].children.length; j++){
                         // console.log(objects[i].children[j]);
-                        objects[i].children[j].material.color.set(0xff0000);
+                        objects[i].children[j].material.color.set(0x0000ff);
+                        // var data = {"index": i};
+                        if(socket) socket.emit("color", i);
                     }
                     break;
                 }

@@ -2,16 +2,30 @@ Player = function(data) {
     var p1 = data.p1;
     var x, y, z;
     var h, w, d;
+    var life = 3;
 
-    var geometry = new THREE.BoxGeometry(20, 20, 20);
-    for (var i = 0, l = geometry.faces.length; i < l; i++) {
+    var geometry = new THREE.BoxGeometry(20, 40, 20);
+    if (p1) {
+        for (var i = 0, l = geometry.faces.length; i < l; i++) {
 
-        var face = geometry.faces[i];
-        face.vertexColors[0] = new THREE.Color(0xff0000);
-        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+            var face = geometry.faces[i];
+            face.vertexColors[0] = new THREE.Color(0x0000ff);
+            face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+            face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
 
+        }
     }
+    else {
+        for (var i = 0, l = geometry.faces.length; i < l; i++) {
+
+            var face = geometry.faces[i];
+            face.vertexColors[0] = new THREE.Color(0xff0000);
+            face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+            face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+
+        }
+    }
+
     var material = new THREE.MeshPhongMaterial({
         specular: 0xffffff,
         shading: THREE.FlatShading,
@@ -123,9 +137,14 @@ Player = function(data) {
         }
     }
 
+    this.damage=function(){
+        life -= 1;
+        return life;
+    }
 
     this.update = function(data) {
         if (p1) {
+            console.log(playermesh.position);
             playermesh.position.x = pointerlock.getObject().position.x;
             playermesh.position.y = pointerlock.getObject().position.y;
             playermesh.position.z = pointerlock.getObject().position.z;
@@ -144,9 +163,9 @@ Player = function(data) {
             nord.x = pointerlock.getDirection().x;
             nord.y = pointerlock.getDirection().y;
             nord.z = pointerlock.getDirection().z;
-            sight.position.x = pointerlock.getObject().position.x + (nord.x*2);
-            sight.position.y = pointerlock.getObject().position.y + (nord.y*2);
-            sight.position.z = pointerlock.getObject().position.z + (nord.z*2);
+            sight.position.x = pointerlock.getObject().position.x + (nord.x * 2);
+            sight.position.y = pointerlock.getObject().position.y + (nord.y * 2);
+            sight.position.z = pointerlock.getObject().position.z + (nord.z * 2);
 
         } else {
 

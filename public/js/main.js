@@ -8,24 +8,69 @@ var player, enemy, bullets = [];
 
 
 var controlsEnabled = false;
-var ready = true;
+var ready = false;
 var socket = socket;
 // var sendData = new SendData();
 var click = false;
 
 
-function generateMap(){
+function generateMap() {
 
-    var arr = []
-    while(arr.length < 100){
-        var randomnumber = Math.ceil(Math.random()*100)
-        if(arr.indexOf(randomnumber) > -1) continue;
+    var arr = [];
+    var pos = [];
+    while (arr.length < 80) {
+        var randomnumber = Math.floor(Math.random() * 256);
+        if (arr.indexOf(randomnumber) > -1) continue;
         arr[arr.length] = randomnumber;
+        var position = {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        };
+        var remainder = randomnumber % 8;
+        position.z = remainder;
+        var quotient = Math.floor(randomnumber / 8);
+        remainder = quotient % 8;
+        position.x = remainder;
+        quotient = Math.floor(quotient / 8);
+        remainder = quotient % 8;
+        position.y = remainder;
+
+        position.z = (position.z * 100 - 400);
+        position.x = (position.x * 100 - 400);
+        position.y = (position.y * 120) + 10;
+        pos.push(position);
+
     }
+    return pos;
 }
 
 
 if (Detector.webgl) {
+    // Set the date we're counting down to
+    var countDownDate = new Date("Jan 5, 2018 15:37:25").getTime();
+    var countDown = 6;
+    // Update the count down every 1 second
+    var timer = setInterval(function() {
+        countDown -= 1;
+        // var text2 = document.createElement('div');
+        var text2 = document.querySelector('#timer');
+        text2.style.position = 'absolute';
+        //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+        text2.style.width = 100;
+        text2.style.height = 200;
+        // text2.style.backgroundColor = "blue";
+        text2.innerHTML = "Match start in " + countDown + " sec";
+        text2.style.top = 200 + 'px';
+        text2.style.left = 400 + 'px';
+        // document.body.appendChild(text2);
+
+        if (countDown == 0) {
+            ready = true;
+            document.getElementById("timer").remove();
+            clearInterval(timer);
+        }
+    }, 1000);
     if (socket) {
         socket.on("start match", function(data) {
             console.log("start match");
@@ -33,9 +78,9 @@ if (Detector.webgl) {
             mouselock = new MouseLock();
             init(data);
             animate();
-            socket.on("ready", function() {
-                ready = true;
-            });
+            // socket.on("ready", function() {
+            //     ready = true;
+            // });
 
         });
     } else {
@@ -56,37 +101,51 @@ if (Detector.webgl) {
                 },
                 "direction": 1
             },
-            "objects": [{
-                    "type": "cross",
-                    "position": {
-                        "x": 0,
-                        "y": 10,
-                        "z": -350
-                    },
-                    "rotation": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    }
-                },
-                {
-                    "type": "h_form",
-                    "position": {
-                        "x": 0,
-                        "y": 100,
-                        "z": 150
-                    },
-                    "rotation": {
-                        "x": 0,
-                        "y": 0,
-                        "z": 0
-                    }
-                }
-            ]
+            "objects": []
         };
-        init(data);
-        mouselock = new MouseLock();
+        var pos = generateMap();
+        // console.log(pos);
+        for (var i = 0; i < pos.length; i++) {
+            var elem = {
+                "type": "",
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                }
+            };
+            // var r = Math.random();
+            // console.log(r);
+            // if (r < 0.1) elem.type = "cross";
+            // else if (r > 0.9) elem.type = "h_form";
+            // else elem.type = "plane";
+            elem.type = "plane";
+            elem.position.x = pos[i].x;
+            elem.position.y = pos[i].y;
+            elem.position.z = pos[i].z;
 
+            var phi = 0;
+            if (elem.type == "plane") {
+                r = Math.random();
+                if (r > 0.2) phi = -Math.PI / 2;
+                elem.rotation.x = phi;
+                r = Math.random();
+                if (r > .7) phi = Math.PI / 2;
+                else phi = 0;
+                elem.rotation.y = phi;
+            }
+
+            elem.rotation.z = 0;
+            data.objects.push(elem);
+        }
+        // console.log(data);
+        mouselock = new MouseLock();
+        init(data);
         animate();
     }
 
@@ -99,7 +158,7 @@ if (Detector.webgl) {
 
 function init(data) {
     //camera
-    camera = new THREE.PerspectiveCamera(75, (window.innerWidth / window.innerHeight), 1, 1000);
+    camera = new THREE.PerspectiveCamera(75, (window.innerWidth / window.innerHeight), 1, 1500);
 
     //scene
     scene = new THREE.Scene();
@@ -140,7 +199,6 @@ function init(data) {
     var map = new Map(data.objects);
 
 
-
     //renderer
     renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0xffffff);
@@ -152,6 +210,49 @@ function init(data) {
     //resize
     window.addEventListener('resize', onWindowResize, false);
 
+
+    if (socket) {
+        socket.on("data", function(data) {
+            enemy.update(data.player);
+        });
+        socket.on("hit", function() {
+            var life = player.damage();
+            if (life == 0) {
+                var text2 = document.querySelector('#points');
+                text2.style.position = 'absolute';
+                //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+                text2.style.width = 100;
+                text2.style.height = 200;
+                // text2.style.backgroundColor = "blue";
+                text2.innerHTML = "You Lose!";
+                text2.style.top = 200 + 'px';
+                text2.style.left = 400 + 'px';
+                socket.emit("dead");
+                ready = false;
+            }
+        });
+        socket.on("win", function() {
+            console.log("winner");
+            var text2 = document.querySelector('#points');
+            text2.style.position = 'absolute';
+            //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+            text2.style.width = 100;
+            text2.style.height = 200;
+            // text2.style.backgroundColor = "blue";
+            text2.innerHTML = "You Win!";
+            text2.style.top = 200 + 'px';
+            text2.style.left = 400 + 'px';
+            ready = false;
+        });
+        socket.on("color", function(data) {
+            console.log(data);
+            for (var j = 0; j < objects[data].children.length; j++) {
+                // console.log(objects[i].children[j]);
+                objects[data].children[j].material.color.set(0xff0000);
+
+            }
+        });
+    }
 }
 
 function onWindowResize() {
@@ -171,7 +272,7 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    if (true) {
+    if (ready) {
         controls.update();
         player.update();
         for (var i = 0; i < bullets.length; i++) {
@@ -182,7 +283,7 @@ function animate() {
                 bullets.splice(i, 1);
             } else if (bullets[i].hit()) {
                 // console.log("hit");
-                ready = false;
+                // ready = false;
                 // remove(i);
                 scene.remove(bullets[i].getMesh());
                 bullets.splice(i, 1);
@@ -190,14 +291,7 @@ function animate() {
             }
 
         }
-        if (socket) {
-            socket.on("data", function(data) {
-                enemy.update(data.player);
-            });
-            socket.on("hit", function() {
-                ready = false;
-            });
-        }
+
 
 
         var data = {
