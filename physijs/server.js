@@ -8,26 +8,26 @@ var fs = require('fs');
 var sockets, players, pendings, ingame, matches, id = 0;
 
 // app.use('/static', express.static('public'));
-app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static(path.join(__dirname, 'examples')));
-var main = fs.readFileSync('./public/views/main.html', "utf8");
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'examples')));
+// var main = fs.readFileSync('./public/views/main.html', "utf8");
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/public/views/index.html');
+    res.sendFile(__dirname + '/examples/body.html');
 });
-app.get('/examples', function(req, res) {
-    res.sendFile(__dirname + '/examples/views/main.html');
-});
-app.get('/simple', function(req, res) {
-    res.sendFile(__dirname + '/examples/simple.html');
-});
+// app.get('/examples', function(req, res) {
+//     res.sendFile(__dirname + '/examples/views/main.html');
+// });
+// app.get('/simple', function(req, res) {
+//     res.sendFile(__dirname + '/examples/simple.html');
+// });
 
-app.get('/main', function(req, res) {
-    // if(ingame.indexOf(req.params.id)<0)
-    //     res.sendFile(__dirname + '/public/views/index.html');
-    // else
-    res.sendFile(__dirname + '/public/views/main.html');
-});
+// app.get('/main', function(req, res) {
+//     // if(ingame.indexOf(req.params.id)<0)
+//     //     res.sendFile(__dirname + '/public/views/index.html');
+//     // else
+//     res.sendFile(__dirname + '/public/views/main.html');
+// });
 
 app.get('/info', function(req, res) {
     console.log(sockets.length);
@@ -80,7 +80,7 @@ io.on('connection', function(socket) {
 
 init();
 
-http.listen(3000, function() {
+http.listen(3001, function() {
     console.log('listening on *:3000');
 });
 

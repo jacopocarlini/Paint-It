@@ -19,6 +19,7 @@ THREE.PointerLockControls = function(camera) {
 
     var onMouseMove = function(event) {
 
+
         if (scope.enabled === false) return;
 
         var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;

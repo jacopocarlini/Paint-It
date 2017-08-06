@@ -87,6 +87,24 @@ Bullet = function() {
 
             return true;
         }
+        var sud = new THREE.Vector3(direction.x, direction.y, -direction.z);
+        var objray = new THREE.Raycaster(sphere.position, sud, 0, 10);
+        var objhit = objray.intersectObjects(objects, true);
+        if (objhit.length > 0) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objhit[0].object.parent === objects[i]) {
+                    for (var j = 0; j < objects[i].children.length; j++){
+                        // console.log(objects[i].children[j]);
+                        objects[i].children[j].material.color.set(0x0000ff);
+                        // var data = {"index": i};
+                        if(socket) socket.emit("color", i);
+                    }
+                    break;
+                }
+            }
+
+            return true;
+        }
 
         //floors
         var floorray = new THREE.Raycaster(sphere.position, direction, 0, 50);

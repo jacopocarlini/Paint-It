@@ -158,7 +158,7 @@ Controls = function(document) {
             else {
                 velocity.y += 9.0 * mass * delta;
             } // 100.0 = mass
-
+            
             if (moveForward) {
                 if (collision.getNord()) velocity.z = 0;
                 else if (collision.getNordOvest()) velocity.x += 400.0 * delta * speed;

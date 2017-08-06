@@ -1,16 +1,21 @@
-var camera, scene, renderer, mouse = new THREE.Vector2();
+'use strict';
+
+Physijs.scripts.worker = '../js/physijs_worker.js';
+Physijs.scripts.ammo = '../js/ammo.js';
+
+var camera, scene, scene_phisi, renderer, mouse = new THREE.Vector2();
 
 var geometry, material, mesh;
 var objects = [];
 var floors = [];
 var mouselock, controls, pointerlock;
-var player, enemy, bullets = [];
+var player, enemy, bullets = [],
+    enemy_bullets = [];
 
 
 var controlsEnabled = false;
 var ready = false;
 var socket = socket;
-// var sendData = new SendData();
 var click = false;
 
 
@@ -47,10 +52,7 @@ function generateMap() {
 
 
 if (Detector.webgl) {
-    // Set the date we're counting down to
-    var countDownDate = new Date("Jan 5, 2018 15:37:25").getTime();
     var countDown = 6;
-    // Update the count down every 1 second
     var timer = setInterval(function() {
         countDown -= 1;
         // var text2 = document.createElement('div');
@@ -119,11 +121,11 @@ if (Detector.webgl) {
                     "z": 0
                 }
             };
-            // var r = Math.random();
-            // console.log(r);
-            // if (r < 0.1) elem.type = "cross";
-            // else if (r > 0.9) elem.type = "h_form";
-            // else elem.type = "plane";
+            var r = Math.random();
+            console.log(r);
+            if (r < 0.1) elem.type = "cross";
+            else if (r > 0.9) elem.type = "h_form";
+            else elem.type = "plane";
             elem.type = "plane";
             elem.position.x = pos[i].x;
             elem.position.y = pos[i].y;
@@ -143,7 +145,7 @@ if (Detector.webgl) {
             elem.rotation.z = 0;
             data.objects.push(elem);
         }
-        // console.log(data);
+        console.log(data);
         mouselock = new MouseLock();
         init(data);
         animate();
@@ -157,20 +159,22 @@ if (Detector.webgl) {
 
 
 function init(data) {
+    //scene
+    // scene = new THREE.Scene();
+    // scene.fog = new THREE.Fog(0xffffff, 0, 1000);
+    scene = new Physijs.Scene;
+
     //camera
     camera = new THREE.PerspectiveCamera(75, (window.innerWidth / window.innerHeight), 1, 1500);
+    // camera.position.set( 60, 50, 60 );
+    // camera.lookAt( scene.position );
 
-    //scene
-    scene = new THREE.Scene();
-    // scene.fog = new THREE.Fog(0xffffff, 0, 1000);
+
 
     //light
     var light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
     light.position.set(0.5, 1, 0.75);
     scene.add(light);
-
-
-
 
 
     //controls
@@ -200,12 +204,14 @@ function init(data) {
 
 
     //renderer
-    renderer = new THREE.WebGLRenderer();
-    renderer.setClearColor(0xffffff);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer = new THREE.WebGLRenderer({
+        antialias: true
+    });
+    // renderer.setClearColor(0xffffff);
+    // renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
+    // document.getElementById('viewport').appendChild(renderer.domElement);
 
     //resize
     window.addEventListener('resize', onWindowResize, false);
@@ -213,7 +219,12 @@ function init(data) {
 
     if (socket) {
         socket.on("data", function(data) {
-            enemy.update(data.player);
+            // enemy.update(data.player);
+            // console.log(data);
+            enemy_bullets = data.enemy_bullets;
+            for (var i = 0; i < enemy_bullets.length; i++) {
+                enemy_bullets[i].update();
+            }
         });
         socket.on("hit", function() {
             var life = player.damage();
@@ -270,9 +281,9 @@ function remove(id) {
 
 function animate() {
 
-    requestAnimationFrame(animate);
+    scene.simulate(); // run physics
 
-    if (ready) {
+    if (true) {
         controls.update();
         player.update();
         for (var i = 0; i < bullets.length; i++) {
@@ -294,6 +305,7 @@ function animate() {
 
 
 
+
         var data = {
             "player": {
                 "position": {
@@ -306,10 +318,24 @@ function animate() {
                     "y": pointerlock.getDirection().y,
                     "z": pointerlock.getDirection().z
                 }
-            }
+            },
+            "enemy_bullets": []
         };
+        for (var i = 0; i < bullets.length; i++) {
+            var p = bullets[i].getMesh().position;
+            var elem = {
+                "x": p.x,
+                "y": p.y,
+                "z": p.z
+            };
+            data.enemy_bullets.push(elem);
+        }
+
+
         if (socket) socket.emit("data", data);
     }
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+
 
 }
