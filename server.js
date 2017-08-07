@@ -101,6 +101,9 @@ function addEventListener(player1, player2) {
     socket1.on("data", function(data) {
         socket2.emit("data", data);
     });
+    socket1.on("bullet", function(data) {
+        socket2.emit("bullet", data);
+    });
 
     socket1.on("hit", function(data) {
         socket2.emit("hit", data);

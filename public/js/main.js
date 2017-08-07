@@ -73,83 +73,16 @@ if (Detector.webgl) {
             clearInterval(timer);
         }
     }, 1000);
-    if (socket) {
-        socket.on("start match", function(data) {
-            console.log("start match");
 
-            mouselock = new MouseLock();
-            init(data);
-            animate();
-            // socket.on("ready", function() {
-            //     ready = true;
-            // });
-
-        });
-    } else {
-        var data = {
-            "player": {
-                "position": {
-                    "x": 0,
-                    "y": 10,
-                    "z": 350
-                },
-                "direction": -1
-            },
-            "enemy": {
-                "position": {
-                    "x": 0,
-                    "y": 10,
-                    "z": -350
-                },
-                "direction": 1
-            },
-            "objects": []
-        };
-        var pos = generateMap();
-        // console.log(pos);
-        for (var i = 0; i < pos.length; i++) {
-            var elem = {
-                "type": "",
-                "position": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                },
-                "rotation": {
-                    "x": 0,
-                    "y": 0,
-                    "z": 0
-                }
-            };
-            var r = Math.random();
-            console.log(r);
-            if (r < 0.1) elem.type = "cross";
-            else if (r > 0.9) elem.type = "h_form";
-            else elem.type = "plane";
-            elem.type = "plane";
-            elem.position.x = pos[i].x;
-            elem.position.y = pos[i].y;
-            elem.position.z = pos[i].z;
-
-            var phi = 0;
-            if (elem.type == "plane") {
-                r = Math.random();
-                if (r > 0.2) phi = -Math.PI / 2;
-                elem.rotation.x = phi;
-                r = Math.random();
-                if (r > .7) phi = Math.PI / 2;
-                else phi = 0;
-                elem.rotation.y = phi;
-            }
-
-            elem.rotation.z = 0;
-            data.objects.push(elem);
-        }
-        console.log(data);
+    socket.on("start match", function(data) {
+        console.log("start match");
         mouselock = new MouseLock();
         init(data);
         animate();
-    }
+
+
+    });
+
 
 
 } else {
@@ -159,15 +92,13 @@ if (Detector.webgl) {
 
 
 function init(data) {
-    //scene
-    // scene = new THREE.Scene();
-    // scene.fog = new THREE.Fog(0xffffff, 0, 1000);
+
     scene = new Physijs.Scene;
+    scene.setGravity(new THREE.Vector3(0, -10, 0));
 
     //camera
     camera = new THREE.PerspectiveCamera(75, (window.innerWidth / window.innerHeight), 1, 1500);
-    // camera.position.set( 60, 50, 60 );
-    // camera.lookAt( scene.position );
+    camera.lookAt(new THREE.Vector3(0,0,-1));
 
 
 
@@ -178,12 +109,20 @@ function init(data) {
 
 
     //controls
-    controls = new Controls(document);
+    pointerlock = new THREE.PointerLockControls(camera);
+    scene.add(pointerlock.getObject());
+
+
     pointerlock.getObject().position.x = data.player.position.x;
     pointerlock.getObject().position.y = data.player.position.y;
     pointerlock.getObject().position.z = data.player.position.z;
 
     if (data.player.direction == 1) pointerlock.setOppositeDirection();
+
+
+    controls = new Controls(document);
+
+
 
     //Player
     var p1 = {
@@ -191,6 +130,8 @@ function init(data) {
         "player": data.player
     };
     player = new Player(p1);
+
+
 
     //Enemy
     var p2 = {
@@ -217,53 +158,54 @@ function init(data) {
     window.addEventListener('resize', onWindowResize, false);
 
 
-    if (socket) {
-        socket.on("data", function(data) {
-            // enemy.update(data.player);
-            // console.log(data);
-            enemy_bullets = data.enemy_bullets;
-            for (var i = 0; i < enemy_bullets.length; i++) {
-                enemy_bullets[i].update();
-            }
-        });
-        socket.on("hit", function() {
-            var life = player.damage();
-            if (life == 0) {
-                var text2 = document.querySelector('#points');
-                text2.style.position = 'absolute';
-                //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-                text2.style.width = 100;
-                text2.style.height = 200;
-                // text2.style.backgroundColor = "blue";
-                text2.innerHTML = "You Lose!";
-                text2.style.top = 200 + 'px';
-                text2.style.left = 400 + 'px';
-                socket.emit("dead");
-                ready = false;
-            }
-        });
-        socket.on("win", function() {
-            console.log("winner");
+
+    socket.on("data", function(data) {
+        enemy.update(data.player);
+
+    });
+
+    socket.on("bullet", function(data) {
+        var bullet = new Bullet();
+        bullet.addEnemy(data);
+        enemy_bullets.push(bullet);
+    });
+
+    socket.on("hit", function() {
+        var life = player.damage();
+        if (life == 0) {
             var text2 = document.querySelector('#points');
             text2.style.position = 'absolute';
             //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
             text2.style.width = 100;
             text2.style.height = 200;
             // text2.style.backgroundColor = "blue";
-            text2.innerHTML = "You Win!";
+            text2.innerHTML = "You Lose!";
             text2.style.top = 200 + 'px';
             text2.style.left = 400 + 'px';
+            socket.emit("dead");
             ready = false;
-        });
-        socket.on("color", function(data) {
-            console.log(data);
-            for (var j = 0; j < objects[data].children.length; j++) {
-                // console.log(objects[i].children[j]);
-                objects[data].children[j].material.color.set(0xff0000);
+        }
+    });
 
-            }
-        });
-    }
+    socket.on("win", function() {
+        console.log("winner");
+        var text2 = document.querySelector('#points');
+        text2.style.position = 'absolute';
+        //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+        text2.style.width = 100;
+        text2.style.height = 200;
+        // text2.style.backgroundColor = "blue";
+        text2.innerHTML = "You Win!";
+        text2.style.top = 200 + 'px';
+        text2.style.left = 400 + 'px';
+        ready = false;
+    });
+
+    socket.on("color", function(data) {
+        console.log(data);
+        objects[data].material.color.set(0xff0000);
+    });
+
 }
 
 function onWindowResize() {
@@ -286,21 +228,24 @@ function animate() {
     if (true) {
         controls.update();
         player.update();
-        for (var i = 0; i < bullets.length; i++) {
-            bullets[i].update();
-            if (bullets[i].collision()) {
-                // console.log("coll");
-                scene.remove(bullets[i].getMesh());
-                bullets.splice(i, 1);
-            } else if (bullets[i].hit()) {
-                // console.log("hit");
-                // ready = false;
-                // remove(i);
-                scene.remove(bullets[i].getMesh());
-                bullets.splice(i, 1);
-                if (socket) socket.emit("hit");
-            }
 
+        for (var i = 0; i < bullets.length; i++) {
+            // console.log(bullets[i].getMesh().position);
+            bullets[i].update();
+            if (bullets[i].getHit()) {
+                if(bullets[i].getShot()){
+                    socket.emit("hit");
+                }
+                scene.remove(bullets[i].getMesh());
+                bullets.splice(i, 1);
+            }
+        }
+        for (var i = 0; i < enemy_bullets.length; i++) {
+            enemy_bullets[i].update();
+            if (enemy_bullets[i].getHit()) {
+                scene.remove(enemy_bullets[i].getMesh());
+                enemy_bullets.splice(i, 1);
+            }
         }
 
 
@@ -321,6 +266,7 @@ function animate() {
             },
             "enemy_bullets": []
         };
+
         for (var i = 0; i < bullets.length; i++) {
             var p = bullets[i].getMesh().position;
             var elem = {
@@ -332,7 +278,7 @@ function animate() {
         }
 
 
-        if (socket) socket.emit("data", data);
+        socket.emit("data", data);
     }
     renderer.render(scene, camera);
     requestAnimationFrame(animate);

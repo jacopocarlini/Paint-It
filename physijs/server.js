@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'examples')));
 // var main = fs.readFileSync('./public/views/main.html', "utf8");
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/examples/body.html');
+    res.sendFile(__dirname + '/examples/fp.html');
 });
 // app.get('/examples', function(req, res) {
 //     res.sendFile(__dirname + '/examples/views/main.html');

@@ -3,7 +3,7 @@ Controls = function(document) {
     var moveBackward = false;
     var moveLeft = false;
     var moveRight = false;
-    var canJump = false;
+    var canJump = true;
     var gravity = 0;
     var prevTime = performance.now();
     var velocity = new THREE.Vector3();
@@ -11,13 +11,13 @@ Controls = function(document) {
     var mass = 100.0;
 
     var altezza = 10;
-    var id=-1;
+    var id = -1;
 
 
     var collision = new Collisions();
 
-    pointerlock = new THREE.PointerLockControls(camera);
-    scene.add(pointerlock.getObject());
+    // pointerlock = new THREE.PointerLockControls(camera);
+    // scene.add(pointerlock.getObject());
 
     var onKeyDown = function(event) {
 
@@ -27,6 +27,7 @@ Controls = function(document) {
 
             case 38: // up
             case 87: // w
+                // console.log("avanti");
                 moveForward = true;
                 break;
 
@@ -112,7 +113,18 @@ Controls = function(document) {
         if (event.button == 0 && click) {
             // console.log("lefttClick");
             var bullet = new Bullet();
+            bullet.add();
             bullets.push(bullet);
+            var p = pointerlock.getObject().position;
+            var data = {
+                "position": {
+                    "x": p.x,
+                    "y": p.y,
+                    "z": p.z
+                },
+                "direction": pointerlock.getDirection()
+            };
+            socket.emit("bullet", data);
 
             // console.log(pointerlock.getObject().position);
             // console.log(pointerlock.getDirection());
@@ -132,6 +144,13 @@ Controls = function(document) {
     var raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 100);
 
     //Methods
+
+    function approx(n) {
+        for (var i = 10; i < 1000; i += 10) {
+            if (n < i) return i
+        }
+        return 10;
+    }
 
     //update
     this.update = function() {
@@ -158,7 +177,7 @@ Controls = function(document) {
             else {
                 velocity.y += 9.0 * mass * delta;
             } // 100.0 = mass
-            
+
             if (moveForward) {
                 if (collision.getNord()) velocity.z = 0;
                 else if (collision.getNordOvest()) velocity.x += 400.0 * delta * speed;
@@ -190,28 +209,36 @@ Controls = function(document) {
             if (gravity == 0) {
                 if (collision.getGiu()) {
                     velocity.y = Math.max(0, velocity.y);
+                    // console.log(approx(collision.getIntersectG()[0].point.y));
+                    // pointerlock.getObject().position.y = approx(collision.getIntersectG()[0].point.y) + 10;
+
+                    // console.log(collision.getIntersectG());
                     canJump = true;
-                }
+                    // console.log("true");
+                } else canJump = false;
                 if (collision.getUp()) {
-                    velocity.y = -350;
-                    canJump = true;
+                    velocity.y = -200;
+                    // canJump = true;
                 }
             } else {
                 if (collision.getUp()) {
                     velocity.y = Math.min(0, velocity.y);
-
                     canJump = true;
-                }
+                    pointerlock.getObject().position.y = Math.round(pointerlock.getObject().position.y);
+                } else canJump = false;
                 if (collision.getGiu()) {
-                    velocity.y = 350;
-                    canJump = true;
+                    velocity.y = 200;
+                    // canJump = true;
                 }
 
             }
 
+            // console.log(velocity.y);
             pointerlock.getObject().translateX(velocity.x * delta);
             pointerlock.getObject().translateY(velocity.y * delta);
             pointerlock.getObject().translateZ(velocity.z * delta);
+
+
 
             if (pointerlock.getObject().position.y < altezza) {
                 velocity.y = 0;

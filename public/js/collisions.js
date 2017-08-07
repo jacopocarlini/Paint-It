@@ -11,6 +11,8 @@ Collisions = function() {
     var isOnObjectNO = false;
     var isOnObjectSO = false;
 
+    var intersectN, intersectS, intersectE, intersectO, intersectG, intersectU;
+
     var l = 9;
     var d = 9;
     var p = 0;
@@ -48,6 +50,26 @@ Collisions = function() {
     }
 
 
+    this.getIntersectN = function() {
+        return intersectN;
+    }
+    this.getIntersectS = function() {
+        return intersectS;
+    }
+    this.getIntersectE = function() {
+        return intersectE;
+    }
+    this.getIntersectO = function() {
+        return intersectO;
+    }
+    this.getIntersectG = function() {
+        return intersectG;
+    }
+    this.getIntersectU = function() {
+        return intersectU;
+    }
+
+
     this.compute = function() {
         isOnObjectN = false;
         isOnObjectS = false;
@@ -60,8 +82,8 @@ Collisions = function() {
         nord.x = pointerlock.getDirection().x;
         nord.z = pointerlock.getDirection().z;
         var collisionN = new THREE.Raycaster(pointerlock.getObject().position, nord, 0, 10);
-        var intersect = collisionN.intersectObjects(objects, true);
-        isOnObjectN = intersect.length > 0;
+        intersectN = collisionN.intersectObjects(objects, true);
+        isOnObjectN = intersectN.length > 0;
         // console.log(isOnObjectN);
 
 
@@ -69,24 +91,24 @@ Collisions = function() {
         sud.x = pointerlock.getDirection().x;
         sud.z = -pointerlock.getDirection().z;
         var collisionS = new THREE.Raycaster(pointerlock.getObject().position, sud, 0, 10);
-        var intersect = collisionS.intersectObjects(objects, true);
-        isOnObjectS = intersect.length > 0;
+        intersectS = collisionS.intersectObjects(objects, true);
+        isOnObjectS = intersectS.length > 0;
 
 
         var est = new THREE.Vector3(1, 0, 0);
         est.z = nord.x;
         est.x = -nord.z;
         var collisionE = new THREE.Raycaster(pointerlock.getObject().position, est, 0, 10);
-        var intersect = collisionE.intersectObjects(objects, true);
-        isOnObjectE = intersect.length > 0;
+        intersectE = collisionE.intersectObjects(objects, true);
+        isOnObjectE = intersectE.length > 0;
 
 
         var ovest = new THREE.Vector3(-1, 0, 0);
         ovest.z = -nord.x;
         ovest.x = nord.z;
         var collisionO = new THREE.Raycaster(pointerlock.getObject().position, ovest, 0, 10);
-        var intersect = collisionO.intersectObjects(objects, true);
-        isOnObjectO = intersect.length > 0;
+        intersectO = collisionO.intersectObjects(objects, true);
+        isOnObjectO = intersectO.length > 0;
 
 
 
@@ -95,28 +117,28 @@ Collisions = function() {
 
         var giu = new THREE.Vector3(0, -1, 0);
         var collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
-        var intersect = collisionG.intersectObjects(objects, true);
-        isOnObjectG = intersect.length > 0;
-        giu.z = nord.z + est.z;
-        giu.x = nord.x + est.x;
-        collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
-        intersect = collisionG.intersectObjects(objects, true);
-        isOnObjectG = isOnObjectG || intersect.length > 0;
-        giu.z = nord.z + ovest.z;
-        giu.x = nord.x + ovest.x;
-        collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
-        intersect = collisionG.intersectObjects(objects, true);
-        isOnObjectG = isOnObjectG || intersect.length > 0;
-        giu.z = sud.z + est.z;
-        giu.x = sud.x + est.x;
-        collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
-        intersect = collisionG.intersectObjects(objects, true);
-        isOnObjectG = isOnObjectG || intersect.length > 0;
-        giu.z = sud.z + ovest.z;
-        giu.x = sud.x + ovest.x;
-        collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
-        intersect = collisionG.intersectObjects(objects, true);
-        isOnObjectG = isOnObjectG || intersect.length > 0;
+        intersectG = collisionG.intersectObjects(objects, true);
+        isOnObjectG = intersectG.length > 0;
+        // giu.z = nord.z + est.z;
+        // giu.x = nord.x + est.x;
+        // collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
+        // intersectG = collisionG.intersectObjects(objects, true);
+        // isOnObjectG = isOnObjectG || intersectG.length > 0;
+        // giu.z = nord.z + ovest.z;
+        // giu.x = nord.x + ovest.x;
+        // collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
+        // intersectG = collisionG.intersectObjects(objects, true);
+        // isOnObjectG = isOnObjectG || intersectG.length > 0;
+        // giu.z = sud.z + est.z;
+        // giu.x = sud.x + est.x;
+        // collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
+        // intersectG = collisionG.intersectObjects(objects, true);
+        // isOnObjectG = isOnObjectG || intersectG.length > 0;
+        // giu.z = sud.z + ovest.z;
+        // giu.x = sud.x + ovest.x;
+        // collisionG = new THREE.Raycaster(pointerlock.getObject().position, giu, 0, 10);
+        // intersectG = collisionG.intersectObjects(objects, true);
+        // isOnObjectG = isOnObjectG || intersectG.length > 0;
 
 
 
@@ -126,26 +148,26 @@ Collisions = function() {
         var collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
         var intersect = collisionU.intersectObjects(objects, true);
         isOnObjectU = intersect.length > 0;
-        up.z = nord.z + est.z;
-        up.x = nord.x + est.x;
-        collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
-        intersect = collisionU.intersectObjects(objects, true);
-        isOnObjectU = isOnObjectU || intersect.length > 0;
-        up.z = nord.z + ovest.z;
-        up.x = nord.x + ovest.x;
-        collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
-        intersect = collisionU.intersectObjects(objects, true);
-        isOnObjectU = isOnObjectU || intersect.length > 0;
-        up.z = sud.z + est.z;
-        up.x = sud.x + est.x;
-        collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
-        intersect = collisionU.intersectObjects(objects, true);
-        isOnObjectU = isOnObjectU || intersect.length > 0;
-        up.z = sud.z + ovest.z;
-        up.x = sud.x + ovest.x;
-        collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
-        intersect = collisionU.intersectObjects(objects, true);
-        isOnObjectU = isOnObjectU || intersect.length > 0;
+        // up.z = nord.z + est.z;
+        // up.x = nord.x + est.x;
+        // collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
+        // intersectU = collisionU.intersectObjects(objects, true);
+        // isOnObjectU = isOnObjectU || intersectU.length > 0;
+        // up.z = nord.z + ovest.z;
+        // up.x = nord.x + ovest.x;
+        // collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
+        // intersectU = collisionU.intersectObjects(objects, true);
+        // isOnObjectU = isOnObjectU || intersectU.length > 0;
+        // up.z = sud.z + est.z;
+        // up.x = sud.x + est.x;
+        // collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
+        // intersectU = collisionU.intersectObjects(objects, true);
+        // isOnObjectU = isOnObjectU || intersectU.length > 0;
+        // up.z = sud.z + ovest.z;
+        // up.x = sud.x + ovest.x;
+        // collisionU = new THREE.Raycaster(pointerlock.getObject().position, up, 0, 10);
+        // intersectU = collisionU.intersectObjects(objects, true);
+        // isOnObjectU = isOnObjectU || intersectU.length > 0;
 
 
 
