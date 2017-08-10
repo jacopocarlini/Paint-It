@@ -26,9 +26,9 @@ Bullet = function() {
         sphere.position.y = pointerlock.getObject().position.y + (nord.y * 20);
         sphere.position.z = pointerlock.getObject().position.z + (nord.z * 20);
         direction = pointerlock.getDirection();
-        direction.x *= 5000;
-        direction.y *= 5000;
-        direction.z *= 5000;
+        direction.x *= 2000;
+        direction.y *= 2000;
+        direction.z *= 2000;
         // Enable CCD if the object moves more than 1 meter in one simulation frame
         sphere.setCcdMotionThreshold(1);
 
@@ -82,9 +82,9 @@ Bullet = function() {
         sphere.position.y = data.position.y + (nord.y * 20);
         sphere.position.z = data.position.z + (nord.z * 20);
         direction = data.direction;
-        direction.x *= 5000;
-        direction.y *= 5000;
-        direction.z *= 5000;
+        direction.x *= 2000;
+        direction.y *= 2000;
+        direction.z *= 2000;
         // Enable CCD if the object moves more than 1 meter in one simulation frame
         sphere.setCcdMotionThreshold(1);
 
@@ -95,7 +95,7 @@ Bullet = function() {
 
             if (other_object.name == "box") {
                 console.log("box");
-                other_object.material.color.set(0x0000ff);
+                other_object.material.color.set(0xff0000);
                 hit = true;
             }
             if (other_object.name == "enemy") {

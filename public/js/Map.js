@@ -1,116 +1,83 @@
 Map = function(data) {
 
-    var ground_material = Physijs.createMaterial(
-			new THREE.MeshLambertMaterial({ color: 0x888888 }),
-			.8, // high friction
-			.3 // low restitution
-		);
-    var ground = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(800, 1, 800),
-			ground_material,
-			0 // mass
-		);
-    ground.name="floor";
-    scene.add(ground);
+    function ground(px, py, pz, rx, ry, rz) {
+
+        var ground_material = Physijs.createMaterial(
+            new THREE.MeshLambertMaterial({
+                color: 0x008800
+            }),
+            .8, // high friction
+            .3 // low restitution
+        );
+        var ground = new Physijs.BoxMesh(
+            new THREE.BoxGeometry(800, 1, 800),
+            ground_material,
+            0 // mass
+        );
+        ground.name = "floor";
+        ground.position.x = px;
+        ground.position.y = py;
+        ground.position.z = pz;
+        ground.rotation.x = rx;
+        ground.rotation.y = ry;
+        ground.rotation.z = rz;
+        scene.add(ground);
+    }
 
 
+    ground(0, 0, 0, 0, 0, 0);
+    ground(0, 400, 0, 0, 0, 0);
+    ground(400, 200, 0, 0, 0, Math.PI / 2);
+    ground(-400, 200, 0, 0, 0, -Math.PI / 2);
+    ground(400, 200, 0, 0, 0, Math.PI / 2);
+    ground(0, 200, 400, -Math.PI / 2, 0, 0);
+    ground(0, 200, -400, Math.PI / 2, 0, 0);
 
-    var ground_material = Physijs.createMaterial(
-			new THREE.MeshLambertMaterial({ color: 0x888888 }),
-			.8, // high friction
-			.3 // low restitution
-		);
-    var ground = new Physijs.BoxMesh(
-			new THREE.BoxGeometry(800, 1, 800),
-			ground_material,
-			0 // mass
-		);
-    ground.name="floor";
-    ground.position.y = 400;
-    ground.rotation.x = Math.PI;
-    scene.add(ground);
 
-    // floor 1
-    geometry = new THREE.PlaneGeometry(2000, 800, 100, 100);
-    geometry.rotateX(-Math.PI / 2);
+    function floor(px, py, pz, rx, ry, rz){
+        geometry = new THREE.PlaneGeometry(2000, 800, 100, 100);
+        geometry.rotateX(-Math.PI / 2);
 
-    for (var i = 0, l = geometry.vertices.length; i < l; i++) {
+        for (var i = 0, l = geometry.vertices.length; i < l; i++) {
 
-        var vertex = geometry.vertices[i];
-        vertex.x += Math.random() * 20 - 10;
-        vertex.y += Math.random() * 2;
-        vertex.z += Math.random() * 20 - 10;
+            var vertex = geometry.vertices[i];
+            vertex.x += Math.random() * 20 - 10;
+            vertex.y += Math.random() * 2;
+            vertex.z += Math.random() * 20 - 10;
+
+        }
+
+        for (var i = 0, l = geometry.faces.length; i < l; i++) {
+
+            var face = geometry.faces[i];
+            face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+            face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+            face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+
+        }
+
+        material = new THREE.MeshBasicMaterial({
+            vertexColors: THREE.VertexColors
+        });
+
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = px;
+        mesh.position.y = py;
+        mesh.position.z = pz;
+        mesh.rotation.x = rx;
+        mesh.rotation.y = ry;
+        mesh.rotation.z = rz;
+        scene.add(mesh);
 
     }
 
-    for (var i = 0, l = geometry.faces.length; i < l; i++) {
-
-        var face = geometry.faces[i];
-        face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-        face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-
-    }
-
-    material = new THREE.MeshBasicMaterial({
-        vertexColors: THREE.VertexColors
-    });
-
-
-
-    mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-    floors.push(mesh);
-
-    // floor 2
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 400;
-    mesh.rotation.x = Math.PI;
-    scene.add(mesh);
-    floors.push(mesh);
-
-
-    // floor 3
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 200;
-    mesh.position.x = 400;
-    mesh.rotation.z = Math.PI / 2;
-    scene.add(mesh);
-    floors.push(mesh);
-
-
-    // floor 4
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 200;
-    mesh.position.x = -400;
-    mesh.rotation.z = -Math.PI / 2;
-    scene.add(mesh);
-    floors.push(mesh);
-
-
-    // floor 5
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 200;
-    mesh.position.z = -400;
-    mesh.rotation.x = Math.PI / 2;
-    scene.add(mesh);
-    floors.push(mesh);
-
-
-    // floor 6
-
-    mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 200;
-    mesh.position.z = 400;
-    mesh.rotation.x = -Math.PI / 2;
-    scene.add(mesh);
-    floors.push(mesh);
-
-
+    // floor(0, 10, 0, Math.PI, 0, 0);
+    // floor(0, 380, 0, Math.PI/2, 0, 0);
+    // floor(400, 200, 0, 0, 0, Math.PI / 2);
+    // floor(-400, 200, 0, 0, 0, -Math.PI / 2);
+    // floor(400, 200, 0, 0, 0, Math.PI / 2);
+    // floor(0, 200, 400, -Math.PI / 2, 0, 0);
+    // floor(0, 200, -400, Math.PI / 2, 0, 0);
 
 
 
@@ -127,30 +94,31 @@ Map = function(data) {
 
     // objects
 
-                for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
+        var box_material = Physijs.createMaterial(
+            new THREE.MeshLambertMaterial({
+                color: 0x888888
+            }),
+            .8, // high friction
+            .3 // low restitution
+        );
+        var box = new Physijs.BoxMesh(
+            new THREE.BoxGeometry(100, 100, 20),
+            box_material,
+            0
+        );
+        // console.log(box);
+        box.position.x = data[i].position.x;
+        box.position.y = data[i].position.y;
+        box.position.z = data[i].position.z;
 
-                        var box_material = Physijs.createMaterial(
-                    			new THREE.MeshLambertMaterial({ color: 0x888888 }),
-                    			.8, // high friction
-                    			.3 // low restitution
-                    		);
-                        var box = new Physijs.BoxMesh(
-                    			new THREE.BoxGeometry(100, 100, 20),
-                    			box_material,
-                    			0
-                    		);
-                            // console.log(box);
-                        box.position.x = data[i].position.x;
-                        box.position.y = data[i].position.y;
-                        box.position.z = data[i].position.z;
-
-                        box.rotation.x = data[i].rotation.x;
-                        box.rotation.y = data[i].rotation.y;
-                        box.rotation.z = data[i].rotation.z;
-                        box.name="box";
-                        objects.push(box);
-                        scene.add(box);
-                    }
+        box.rotation.x = data[i].rotation.x;
+        box.rotation.y = data[i].rotation.y;
+        box.rotation.z = data[i].rotation.z;
+        box.name = "box";
+        objects.push(box);
+        scene.add(box);
+    }
 
 
 }

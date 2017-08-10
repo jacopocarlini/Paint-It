@@ -7,7 +7,6 @@ var camera, scene, scene_phisi, renderer, mouse = new THREE.Vector2();
 
 var geometry, material, mesh;
 var objects = [];
-var floors = [];
 var mouselock, controls, pointerlock;
 var player, enemy, bullets = [],
     enemy_bullets = [];
@@ -55,17 +54,17 @@ if (Detector.webgl) {
     var countDown = 6;
     var timer = setInterval(function() {
         countDown -= 1;
-        // var text2 = document.createElement('div');
-        var text2 = document.querySelector('#timer');
-        text2.style.position = 'absolute';
-        //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-        text2.style.width = 100;
-        text2.style.height = 200;
-        // text2.style.backgroundColor = "blue";
-        text2.innerHTML = "Match start in " + countDown + " sec";
-        text2.style.top = 200 + 'px';
-        text2.style.left = 400 + 'px';
-        // document.body.appendChild(text2);
+        // var text = document.createElement('div');
+        var text = document.querySelector('#timer');
+        text.style.position = 'absolute';
+        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+        text.style.width = 100;
+        text.style.height = 200;
+        // text.style.backgroundColor = "blue";
+        text.innerHTML = "Match start in " + countDown + " sec";
+        text.style.top = 200 + 'px';
+        text.style.left = 400 + 'px';
+        // document.body.appendChild(text);
 
         if (countDown == 0) {
             ready = true;
@@ -76,6 +75,12 @@ if (Detector.webgl) {
 
     socket.on("start match", function(data) {
         console.log("start match");
+        var text = document.querySelector('#points');
+        text.style.position = 'absolute';
+        text.style.width = 200;
+        text.style.height = 100;
+        text.innerHTML = data.player.name+"</br>"+data.enemy.name;
+
         mouselock = new MouseLock();
         init(data);
         animate();
@@ -189,15 +194,15 @@ function init(data) {
 
     socket.on("win", function() {
         console.log("winner");
-        var text2 = document.querySelector('#points');
-        text2.style.position = 'absolute';
-        //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-        text2.style.width = 100;
-        text2.style.height = 200;
-        // text2.style.backgroundColor = "blue";
-        text2.innerHTML = "You Win!";
-        text2.style.top = 200 + 'px';
-        text2.style.left = 400 + 'px';
+        var text = document.querySelector('#result');
+        text.style.position = 'absolute';
+        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+        text.style.width = 100;
+        text.style.height = 200;
+        // text.style.backgroundColor = "blue";
+        text.innerHTML = "You Win!";
+        text.style.top = 200 + 'px';
+        text.style.left = 400 + 'px';
         ready = false;
     });
 

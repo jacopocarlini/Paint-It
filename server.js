@@ -31,21 +31,21 @@ app.get('/main', function(req, res) {
 
 app.get('/info', function(req, res) {
     console.log(sockets.length);
-    console.log("ingame "+ingame.length);
-    console.log("pendings "+pendings.length);
+    console.log("ingame " + ingame.length);
+    console.log("pendings " + pendings.length);
 
     res.send("ciao");
 });
 
 io.on('connection', function(socket) {
     console.log('SERVER: a new user connected');
-    if(sockets.indexOf(socket)>0){
+    if (sockets.indexOf(socket) > 0) {
         console.log("discard");
-         return;
-     }
+        return;
+    }
 
     sockets.push(socket);
-    socket.on("disconnect", function(){
+    socket.on("disconnect", function() {
         console.log("disconnect 1");
         sockets.splice(sockets.indexOf(socket), 1);
     });
@@ -71,7 +71,7 @@ io.on('connection', function(socket) {
             addEventListener(player1, player2);
             addEventListener(player2, player1);
 
-            startMatch(player1.socket, player2.socket);
+            startMatch(player1, player2);
 
         }
 
@@ -117,7 +117,7 @@ function addEventListener(player1, player2) {
         socket2.emit("color", data);
     });
 
-    socket1.on("disconnect", function(){
+    socket1.on("disconnect", function() {
         console.log("disconnect 2");
         socket2.emit("win");
         ingame.splice(ingame.indexOf(player1), 1);
@@ -168,6 +168,7 @@ function startMatch(player1, player2) {
     console.log("SERVER: start Match");
     var data1 = {
         "player": {
+            "name": player1.name,
             "position": {
                 "x": -350,
                 "y": 10,
@@ -176,6 +177,7 @@ function startMatch(player1, player2) {
             "direction": 1
         },
         "enemy": {
+            "name": player2.name,
             "position": {
                 "x": 350,
                 "y": 10,
@@ -187,6 +189,7 @@ function startMatch(player1, player2) {
     };
     var data2 = {
         "player": {
+            "name": player2.name,
             "position": {
                 "x": 350,
                 "y": 10,
@@ -195,6 +198,7 @@ function startMatch(player1, player2) {
             "direction": -1
         },
         "enemy": {
+            "name": player1.name,
             "position": {
                 "x": -350,
                 "y": 10,
@@ -230,13 +234,13 @@ function startMatch(player1, player2) {
         elem.position.y = pos[i].y;
         elem.position.z = pos[i].z;
 
-        var phi = 0 ;
-        if(elem.type == "plane"){
+        var phi = 0;
+        if (elem.type == "plane") {
             r = Math.random();
-            if(r>0.2) phi = -Math.PI/2;
+            if (r > 0.2) phi = -Math.PI / 2;
             elem.rotation.x = phi;
             r = Math.random();
-            if(r>.7) phi = Math.PI/2;
+            if (r > .7) phi = Math.PI / 2;
             else phi = 0;
             elem.rotation.y = phi;
         }
@@ -246,6 +250,6 @@ function startMatch(player1, player2) {
         data2.objects.push(elem);
     }
 
-    player1.emit("start match", data1);
-    player2.emit("start match", data2);
+    player1.socket.emit("start match", data1);
+    player2.socket.emit("start match", data2);
 }
