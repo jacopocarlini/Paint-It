@@ -4,13 +4,13 @@ Map = function(data) {
 
         var ground_material = Physijs.createMaterial(
             new THREE.MeshLambertMaterial({
-                color: 0x008800
+                color: 0x888888
             }),
             .8, // high friction
             .3 // low restitution
         );
         var ground = new Physijs.BoxMesh(
-            new THREE.BoxGeometry(800, 1, 800),
+            new THREE.BoxGeometry(1000, 1, 1000),
             ground_material,
             0 // mass
         );
@@ -25,17 +25,16 @@ Map = function(data) {
     }
 
 
-    ground(0, 0, 0, 0, 0, 0);
-    ground(0, 400, 0, 0, 0, 0);
-    ground(400, 200, 0, 0, 0, Math.PI / 2);
-    ground(-400, 200, 0, 0, 0, -Math.PI / 2);
-    ground(400, 200, 0, 0, 0, Math.PI / 2);
-    ground(0, 200, 400, -Math.PI / 2, 0, 0);
-    ground(0, 200, -400, Math.PI / 2, 0, 0);
+    ground(0, -1, 0, 0, 0, 0);
+    ground(0, 401, 0, 0, 0, 0);
+    ground(401, 200, 0, 0, 0, Math.PI / 2);
+    ground(-401, 200, 0, 0, 0, -Math.PI / 2);
+    ground(0, 200, 401, -Math.PI / 2, 0, 0);
+    ground(0, 200, -401, Math.PI / 2, 0, 0);
 
 
     function floor(px, py, pz, rx, ry, rz){
-        geometry = new THREE.PlaneGeometry(2000, 800, 100, 100);
+        geometry = new THREE.PlaneGeometry(1000, 1000, 100, 100);
         geometry.rotateX(-Math.PI / 2);
 
         for (var i = 0, l = geometry.vertices.length; i < l; i++) {
@@ -71,13 +70,13 @@ Map = function(data) {
 
     }
 
-    // floor(0, 10, 0, Math.PI, 0, 0);
-    // floor(0, 380, 0, Math.PI/2, 0, 0);
-    // floor(400, 200, 0, 0, 0, Math.PI / 2);
-    // floor(-400, 200, 0, 0, 0, -Math.PI / 2);
-    // floor(400, 200, 0, 0, 0, Math.PI / 2);
-    // floor(0, 200, 400, -Math.PI / 2, 0, 0);
-    // floor(0, 200, -400, Math.PI / 2, 0, 0);
+    floor(0, 0, 0, 0, 0, 0);
+    floor(0, 400, 0, -Math.PI, 0, 0);
+    floor(400, 200, 0, 0, 0, Math.PI / 2);
+    floor(-400, 200, 0, 0, 0, -Math.PI / 2);
+    floor(400, 200, 0, 0, 0, Math.PI / 2);
+    floor(0, 200, 400, -Math.PI / 2, 0, 0);
+    floor(0, 200, -400, Math.PI / 2, 0, 0);
 
 
 
