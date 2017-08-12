@@ -132,12 +132,12 @@ Controls = function(document) {
             // var objhit = hit.intersectObjects(objects);
             // if (objhit.length > 0) objhit[0].object.material.color.set(0xff0000);
         }
-        if (event.button == 2) {
-            // console.log("rightClick");
-            var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
-            var objhit = hit.intersectObjects(objects);
-            if (objhit.length > 0) objhit[0].object.material.color.set(0x000000);
-        }
+        // if (event.button == 2) {
+        //     // console.log("rightClick");
+        //     var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
+        //     var objhit = hit.intersectObjects(objects);
+        //     if (objhit.length > 0) objhit[0].object.material.color.set(0x000000);
+        // }
     }
     document.addEventListener('mousedown', leftClick);
 

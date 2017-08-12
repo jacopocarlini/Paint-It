@@ -10,6 +10,10 @@ Bullet = function() {
     var hit = false;
     var shot = false;
 
+    var from = 0;
+    var to = 0;
+    var o;
+
 
     this.add = function() {
         sphere = new Physijs.SphereMesh(
@@ -64,6 +68,21 @@ Bullet = function() {
 
         sphere.name = "bullet";
         scene.add(sphere);
+
+        from = pointerlock.getObject().position;
+        var ray = new THREE.Raycaster(from, pointerlock.getDirection(), 0, 2000);
+        var obj = ray.intersectObjects(objects, true);
+        var flr = ray.intersectObjects(floors, true);
+        if (flr.length > 0){
+            to = flr[0].point;
+            o = flr[0];
+        }
+        if (obj.length > 0){
+            to = obj[0].point;
+            o=obj[0];
+        }
+        // console.log(flr[0]);
+
     }
 
     this.addEnemy = function(data) {
@@ -119,14 +138,41 @@ Bullet = function() {
 
         sphere.name = "bullet";
         scene.add(sphere);
+
+        from = pointerlock.getObject().position;
+        var ray = new THREE.Raycaster(from, pointerlock.getDirection(), 0, 2000);
+        var obj = ray.intersectObjects(objects, true);
+        var flr = ray.intersectObjects(floors, true);
+        if (flr.length > 0){
+            to = flr[0].point;
+            o = flr[0];
+        }
+        if (obj.length > 0){
+            to = obj[0].point;
+            o=obj[0];
+        }
     }
 
 
+    function distance(x, y) {
+        var somma = 0;
+        for (var i = 0; i < 3; i++) {
+            somma = Math.pow(x[i] - y[i], 2);
+        }
+        return Math.sqrt(somma);
+    }
 
     this.update = function() {
-        // console.log(sphere.position);
-        // sphere.setLinearVelocity(new THREE.Vector3(0, 0, -1));
         sphere.setLinearVelocity(direction);
+        if (distance(from, sphere.position) > distance(from, to)) {
+            if(o.name=="box"){
+                hit = true;
+                socket.emit("color", objects.indexOf(o));
+            }
+            if(o.name=="floor"){
+                hit = true;
+            }
+        }
     }
 
     this.getMesh = function() {

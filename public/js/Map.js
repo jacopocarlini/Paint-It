@@ -22,6 +22,7 @@ Map = function(data) {
         ground.rotation.y = ry;
         ground.rotation.z = rz;
         scene.add(ground);
+        floors.push(ground);
     }
 
 

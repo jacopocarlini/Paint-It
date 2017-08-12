@@ -7,6 +7,7 @@ var camera, scene, scene_phisi, renderer, mouse = new THREE.Vector2();
 
 var geometry, material, mesh;
 var objects = [];
+var floors = [];
 var mouselock, controls, pointerlock;
 var player, enemy, bullets = [],
     enemy_bullets = [];
