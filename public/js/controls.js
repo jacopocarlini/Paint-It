@@ -152,6 +152,13 @@ Controls = function(document) {
         return 10;
     }
 
+    this.getWalk = function(){
+        return moveForward || moveLeft || moveRight || moveBackward;
+    }
+    this.getRun = function(){
+        return speed==4.0;
+    }
+
     //update
     this.update = function() {
 

@@ -5,19 +5,20 @@ Physijs.scripts.ammo = '../js/ammo.js';
 
 var camera, scene, scene_phisi, renderer, mouse = new THREE.Vector2();
 
-var geometry, material, mesh;
+var geometry, materials, mesh;
 var objects = [];
 var floors = [];
 var mouselock, controls, pointerlock;
 var player, enemy, bullets = [],
     enemy_bullets = [];
-
+var mech;
 
 var controlsEnabled = false;
 var ready = false;
 var socket = socket;
 var click = false;
 
+var direction;
 
 function generateMap() {
 
@@ -80,11 +81,40 @@ if (Detector.webgl) {
         text.style.position = 'absolute';
         text.style.width = 200;
         text.style.height = 100;
-        text.innerHTML = data.player.name+"</br>"+data.enemy.name;
+        text.innerHTML = data.player.name + "</br>" + data.enemy.name;
 
         mouselock = new MouseLock();
-        init(data);
-        animate();
+        var loader = new THREE.JSONLoader();
+
+        loader.load(
+            // resource URL
+            "models/mech.json",
+
+            // pass the loaded data to the onLoad function.
+            //Here it is assumed to be an object
+            function(geom, mats, skel) {
+                console.log(geom);
+                console.log(mats);
+                console.log(skel);
+                // mech=geom;
+                geometry = geom;
+                materials = mats;
+
+                init(data);
+                animate();
+            },
+
+            // Function called when download progresses
+            function(xhr) {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+
+            // Function called when download errors
+            function(xhr) {
+                console.error('An error happened');
+            }
+        );
+
 
 
     });
@@ -104,7 +134,7 @@ function init(data) {
 
     //camera
     camera = new THREE.PerspectiveCamera(75, (window.innerWidth / window.innerHeight), 1, 1500);
-    camera.lookAt(new THREE.Vector3(0,0,-1));
+    camera.lookAt(new THREE.Vector3(0, 0, -1));
 
 
 
@@ -124,7 +154,7 @@ function init(data) {
     pointerlock.getObject().position.z = data.player.position.z;
 
     if (data.player.direction == 1) pointerlock.setOppositeDirection();
-
+    direction = data.player.direction;
 
     controls = new Controls(document);
 
@@ -233,13 +263,15 @@ function animate() {
 
     if (true) {
         controls.update();
+        // console.log(pointerlock.getDirection());
         player.update();
+        // enemy.update();
 
         for (var i = 0; i < bullets.length; i++) {
             // console.log(bullets[i].getMesh().position);
             bullets[i].update();
             if (bullets[i].getHit()) {
-                if(bullets[i].getShot()){
+                if (bullets[i].getShot()) {
                     socket.emit("hit");
                 }
                 scene.remove(bullets[i].getMesh());
@@ -264,11 +296,13 @@ function animate() {
                     "y": player.getPosition().y,
                     "z": player.getPosition().z
                 },
-                "direction": {
+                "rotation": {
                     "x": pointerlock.getDirection().x,
                     "y": pointerlock.getDirection().y,
                     "z": pointerlock.getDirection().z
-                }
+                },
+                "move":"idle",
+                "run" : false
             },
             "enemy_bullets": []
         };
@@ -283,6 +317,13 @@ function animate() {
             data.enemy_bullets.push(elem);
         }
 
+
+        if(controls.getWalk())
+            data.player.move = "walk";
+        else
+            data.player.move = "idle";
+        if(controls.getRun()) data.player.run = true;
+        else data.player.run = false;
 
         socket.emit("data", data);
     }

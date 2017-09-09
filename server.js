@@ -174,6 +174,11 @@ function startMatch(player1, player2) {
                 "y": 10,
                 "z": -350
             },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 1
+            },
             "direction": 1
         },
         "enemy": {
@@ -182,6 +187,11 @@ function startMatch(player1, player2) {
                 "x": 350,
                 "y": 10,
                 "z": 350
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": -1
             },
             "direction": -1
         },
@@ -195,6 +205,11 @@ function startMatch(player1, player2) {
                 "y": 10,
                 "z": 350
             },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": -1
+            },
             "direction": -1
         },
         "enemy": {
@@ -203,6 +218,11 @@ function startMatch(player1, player2) {
                 "x": -350,
                 "y": 10,
                 "z": -350
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 1
             },
             "direction": 1
         },

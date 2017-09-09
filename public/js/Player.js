@@ -14,7 +14,8 @@ Player = function(data) {
     var mass = 100.0;
 
     var altezza = 10;
-    var playermesh;
+    var playermesh, mixer, walkAction, idleAction;
+    var clock = new THREE.Clock();
 
     if (p1) {
 
@@ -22,7 +23,7 @@ Player = function(data) {
             new THREE.BoxGeometry(20, 20, 20),
             new Physijs.createMaterial(new THREE.MeshLambertMaterial({
                 color: 0x0000ff
-            }), 1, .1),
+            }), 1, 0.1),
             0
         );
 
@@ -30,7 +31,7 @@ Player = function(data) {
         playermesh.position.y = pointerlock.getObject().position.y;
         playermesh.position.z = pointerlock.getObject().position.z;
 
-        playermesh.name="player";
+        playermesh.name = "player";
 
         scene.add(playermesh);
 
@@ -48,21 +49,62 @@ Player = function(data) {
 
     } else {
 
-        playermesh = new Physijs.BoxMesh(
-            new THREE.BoxGeometry(20, 20, 20),
-            new Physijs.createMaterial(new THREE.MeshLambertMaterial({
-                color: 0xff0000
-            }), 1, .1),
-            0
-        );
+        for (var i=0; i<materials.length;i++) {
+            // console.log(materials[i].skinning);
+            materials[i].skinning = true;
+        }
+        playermesh = new THREE.SkinnedMesh(geometry, materials);
 
+        // playermesh = geometry;
+        // playermesh.geometry.scale(2,2,2);
+        // console.log(data.rotation);
         playermesh.position.x = data.player.position.x;
-        playermesh.position.y = data.player.position.y;
+        playermesh.position.y = data.player.position.y-10;
         playermesh.position.z = data.player.position.z;
+        // playermesh.rotation.x = data.player.rotation.x;
+        // playermesh.rotation.y = data.player.rotation.y;
+        // playermesh.rotation.z = data.player.rotation.z;
+        playermesh.rotation.x = 0;
+        if (direction==1) playermesh.rotation.y = Math.PI/2;
+        else playermesh.rotation.y = -Math.PI/2;
+        playermesh.rotation.z = 0;
+        playermesh.geometry.scale(0.2,0.2,0.2);
 
-        playermesh.name="enemy";
+
+        mixer = new THREE.AnimationMixer(playermesh);
+        walkAction = mixer.clipAction('walk');
+        idleAction = mixer.clipAction('idle');
+        walkAction.enabled = true;
+        idleAction.enabled = true;
+        walkAction.setEffectiveWeight( 0.5 );
 
         scene.add(playermesh);
+
+        var box = new THREE.Box3().setFromObject(playermesh);
+        // console.log(box.getSize());
+        var size=box.getSize();
+        // console.log(size);
+        var hitbox = new Physijs.BoxMesh(
+            new THREE.CubeGeometry( size.x, size.y, size.z ),
+            new Physijs.createMaterial(new THREE.MeshLambertMaterial({
+                color: 0x0000ff
+            }), 1, 0.1),
+            0
+        );
+        hitbox.visible=false;
+        hitbox.name="enemy";
+        hitbox.position.x = playermesh.position.x;
+        hitbox.position.y = playermesh.position.y+10;
+        hitbox.position.z = playermesh.position.z;
+        scene.add(hitbox);
+        // console.log(box.getSize());
+
+
+
+
+
+
+
 
     }
 
@@ -108,23 +150,15 @@ Player = function(data) {
 
 
     this.update = function(data) {
+        var time = Date.now() * 0.001;
         if (p1) {
 
-            // console.log("position ", pointerlock.getObject().position);
-            // console.log("direction ", pointerlock.getDirection());
+// console.log(pointerlock.getObject().position);
             playermesh.position.x = pointerlock.getObject().position.x;
             playermesh.position.y = pointerlock.getObject().position.y;
             playermesh.position.z = pointerlock.getObject().position.z;
 
             playermesh.__dirtyPosition = true;
-
-
-
-            // var v1 = new THREE.Vector2(pointerlock.getDirection().x, pointerlock.getDirection().z);
-            // // playermesh.rotation.y = -v1.angle();
-            // var v2 = new THREE.Vector2(pointerlock.getDirection().y, pointerlock.getDirection().z);
-            // // playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
-            // /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
 
 
             nord.x = pointerlock.getDirection().x;
@@ -138,14 +172,34 @@ Player = function(data) {
 
 
             playermesh.position.x = data.position.x;
-            playermesh.position.y = data.position.y;
+            playermesh.position.y = data.position.y-10;
             playermesh.position.z = data.position.z;
+            // playermesh.rotation.x = data.rotation.x;
+            // playermesh.rotation.y = data.rotation.y;
+            // playermesh.rotation.z = data.rotation.z;
+            var v1 = new THREE.Vector2(data.rotation.x, data.rotation.z);
+            playermesh.rotation.y = -v1.angle();
 
-            playermesh.__dirtyPosition = true;
+            hitbox.__dirtyPosition = true;
+            hitbox.position.x = playermesh.position.x;
+            hitbox.position.y = playermesh.position.y+10;
+            hitbox.position.z = playermesh.position.z;
+            var mixerUpdateDelta = clock.getDelta();
+            var speed = 3;
+            if(data.run) speed = 6;
+            else speed = 3;
+            mixer.update(mixerUpdateDelta*speed);
+
+            if(data.move=="walk"){
+                idleAction.stop();
+                walkAction.play();
+            }
+            if(data.move=="idle"){
+                walkAction.stop();
+                idleAction.play()
+            }
 
 
-            // var v1 = new THREE.Vector2(data.direction.x, data.direction.z);
-            // // playermesh.rotation.y = -v1.angle();
             // var v2 = new THREE.Vector2(data.direction.y, data.direction.z);
             // playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!
             // /*inoltre se cancello la rotazione di y allora qui devo rimettere x */
