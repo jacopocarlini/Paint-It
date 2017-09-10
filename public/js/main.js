@@ -301,6 +301,7 @@ function animate() {
                     "y": pointerlock.getDirection().y,
                     "z": pointerlock.getDirection().z
                 },
+                "gravity": controls.getGravity(),
                 "move":"idle",
                 "run" : false
             },

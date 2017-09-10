@@ -179,6 +179,12 @@ Player = function(data) {
             // playermesh.rotation.z = data.rotation.z;
             var v1 = new THREE.Vector2(data.rotation.x, data.rotation.z);
             playermesh.rotation.y = -v1.angle();
+            if(data.gravity==0){
+                playermesh.rotation.x = 0;
+            }
+            else {
+                playermesh.rotation.x = Math.PI;
+            }
 
             hitbox.__dirtyPosition = true;
             hitbox.position.x = playermesh.position.x;

@@ -158,6 +158,9 @@ Controls = function(document) {
     this.getRun = function(){
         return speed==4.0;
     }
+    this.getGravity = function(){
+            return gravity;
+    }
 
     //update
     this.update = function() {
