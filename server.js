@@ -108,9 +108,17 @@ function addEventListener(player1, player2) {
     socket1.on("hit", function(data) {
         socket2.emit("hit", data);
     });
-    socket1.on("dead", function(data) {
+    socket1.on("lose", function(data) {
         console.log("SERVER: End Match");
         socket2.emit("win", data);
+    });
+    socket1.on("win", function(data) {
+        console.log("SERVER: End Match");
+        socket2.emit("lose", data);
+    });
+    socket1.on("pair", function(data) {
+        console.log("SERVER: End Match");
+        socket2.emit("pair", data);
     });
     socket1.on("color", function(data) {
         // console.log(data);

@@ -51,6 +51,16 @@ function generateMap() {
     return pos;
 }
 
+function punti() {
+    var my_points = 0;
+    var your_points = 0;
+    for (var i = 0; i < objects.length; i++) {
+        console.log(objects[i].colore);
+        if (objects[i].colore == "blue") my_points += 1;
+        if (objects[i].colore == "red") your_points += 1;
+    }
+    return my_points - your_points;
+}
 
 if (Detector.webgl) {
     var countDown = 6;
@@ -209,17 +219,9 @@ function init(data) {
     socket.on("hit", function() {
         var life = player.damage();
         if (life == 0) {
-            var text2 = document.querySelector('#points');
-            text2.style.position = 'absolute';
-            //text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-            text2.style.width = 100;
-            text2.style.height = 200;
-            // text2.style.backgroundColor = "blue";
-            text2.innerHTML = "You Lose!";
-            text2.style.top = 200 + 'px';
-            text2.style.left = 400 + 'px';
-            socket.emit("dead");
-            ready = false;
+            if (punti() > 0) socket.emit("win");
+            if (punti() < 0) socket.emit("lose");
+            if (punti() == 0) socket.emit("pair");
         }
     });
 
@@ -232,6 +234,32 @@ function init(data) {
         text.style.height = 200;
         // text.style.backgroundColor = "blue";
         text.innerHTML = "You Win!";
+        text.style.top = 200 + 'px';
+        text.style.left = 400 + 'px';
+        ready = false;
+    });
+    socket.on("lose", function() {
+        console.log("lose");
+        var text = document.querySelector('#result');
+        text.style.position = 'absolute';
+        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+        text.style.width = 100;
+        text.style.height = 200;
+        // text.style.backgroundColor = "blue";
+        text.innerHTML = "You lose!";
+        text.style.top = 200 + 'px';
+        text.style.left = 400 + 'px';
+        ready = false;
+    });
+    socket.on("pair", function() {
+        console.log("pair");
+        var text = document.querySelector('#result');
+        text.style.position = 'absolute';
+        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+        text.style.width = 100;
+        text.style.height = 200;
+        // text.style.backgroundColor = "blue";
+        text.innerHTML = "pair!";
         text.style.top = 200 + 'px';
         text.style.left = 400 + 'px';
         ready = false;
@@ -302,8 +330,8 @@ function animate() {
                     "z": pointerlock.getDirection().z
                 },
                 "gravity": controls.getGravity(),
-                "move":"idle",
-                "run" : false
+                "move": "idle",
+                "run": false
             },
             "enemy_bullets": []
         };
@@ -319,11 +347,11 @@ function animate() {
         }
 
 
-        if(controls.getWalk())
+        if (controls.getWalk())
             data.player.move = "walk";
         else
             data.player.move = "idle";
-        if(controls.getRun()) data.player.run = true;
+        if (controls.getRun()) data.player.run = true;
         else data.player.run = false;
 
         socket.emit("data", data);

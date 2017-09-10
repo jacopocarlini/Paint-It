@@ -116,6 +116,7 @@ Map = function(data) {
         box.rotation.y = data[i].rotation.y;
         box.rotation.z = data[i].rotation.z;
         box.name = "box";
+        box.colore = "grey";
         objects.push(box);
         scene.add(box);
     }

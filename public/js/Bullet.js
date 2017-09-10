@@ -44,6 +44,7 @@ Bullet = function() {
             if (other_object.name == "box") {
                 console.log("box");
                 other_object.material.color.set(0x0000ff);
+                other_object.colore="blue";
                 hit = true;
                 socket.emit("color", objects.indexOf(other_object));
             }
@@ -115,6 +116,7 @@ Bullet = function() {
             if (other_object.name == "box") {
                 console.log("box");
                 other_object.material.color.set(0xff0000);
+                other_object.colore="red";
                 hit = true;
             }
             if (other_object.name == "enemy") {
