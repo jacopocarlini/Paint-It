@@ -68,15 +68,9 @@ if (Detector.webgl) {
         countDown -= 1;
         // var text = document.createElement('div');
         var text = document.querySelector('#timer');
-        text.style.position = 'absolute';
-        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-        text.style.width = 100;
-        text.style.height = 200;
-        // text.style.backgroundColor = "blue";
+
         text.innerHTML = "Match start in " + countDown + " sec";
-        text.style.top = 200 + 'px';
-        text.style.left = 400 + 'px';
-        // document.body.appendChild(text);
+
 
         if (countDown == 0) {
             ready = true;
@@ -87,12 +81,15 @@ if (Detector.webgl) {
 
     socket.on("start match", function(data) {
         console.log("start match");
-        var text = document.querySelector('#points');
-        text.style.position = 'absolute';
-        text.style.width = 200;
-        text.style.height = 100;
-        text.innerHTML = data.player.name + "</br>" + data.enemy.name;
-
+        console.log(data);
+        var text = document.querySelector('#my');
+        text.innerHTML = data.player.name;
+        var text = document.querySelector('#your');
+        text.innerHTML = data.enemy.name;
+        var text = document.querySelector('#my_lifes');
+        text.innerHTML="<img src=\"../images/heart.png\"><img src=\"../images/heart.png\"><img src=\"../images/heart.png\"> ";
+        var text = document.querySelector('#your_lifes');
+        text.innerHTML="<img src=\"../images/heart.png\"><img src=\"../images/heart.png\"><img src=\"../images/heart.png\"> ";
         mouselock = new MouseLock();
         var loader = new THREE.JSONLoader();
 
@@ -218,6 +215,7 @@ function init(data) {
 
     socket.on("hit", function() {
         var life = player.damage();
+
         if (life == 0) {
             if (punti() > 0) socket.emit("win");
             if (punti() < 0) socket.emit("lose");
@@ -289,7 +287,7 @@ function animate() {
 
     scene.simulate(); // run physics
 
-    if (true) {
+    if (ready) {
         controls.update();
         // console.log(pointerlock.getDirection());
         player.update();

@@ -3,26 +3,31 @@
 
 <head>
 	<meta charset=utf-8>
-	<title>My first three.js app</title>
+	<title>Paint-It!</title>
+	<link rel="stylesheet" href="../css/index.css">
 </head>
 
 
 
 <body>
+
 	<div id="index">
-		Welcome into Lobby!
-        <form action="" id="form">
-      <input id="username" autocomplete="off" /><button>Send</button>
-    </form>
+		<div id="title">Paint-It!</div>
+		<div id="center">
+			<div id="username">Username</div>
+			<form action="" id="form">
+				<input id="input" autocomplete="off" required="required" /><button>Send</button>
+			</form>
+		</div>
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	var socket = io();
     $('form').submit(function(){
-        socket.emit('new player',  $('#username').val());
-        $('#form').html("waiting for an opponent...");
+        socket.emit('new player',  $('#input').val());
+        $('#center').html("waiting for an opponent...");
         socket.on('enemy found', function(data){
 			$('#index').html(data);
             // window.location.replace("http://localhost:3000/main");

@@ -3,10 +3,10 @@
 
 <head>
 	<meta charset=utf-8>
-	<title>My first three.js app</title>
-	 <link rel="stylesheet" href="../css/main.css">
-	 <script type="text/javascript" src="../js/three.min.js"></script>
-     <script type="text/javascript" src="../js/physi.js"></script>
+	<title>Main</title>
+	<link rel="stylesheet" href="../css/main.css">
+	<script type="text/javascript" src="../js/three.min.js"></script>
+	<script type="text/javascript" src="../js/physi.js"></script>
 </head>
 
 
@@ -15,17 +15,25 @@
 
 	<div id="container">
 		<div id="instructions">
-		<div id="blocker">
-				<!-- <div id="viewport"></div> -->
-	            <span style="font-size:40px">Click to play</span>
-	            <br /> (W, A, S, D = Move, SPACE = Jump, SHIFT = Run, MOUSE = Look around, Q/E = Change Gravity)
-				</br>
-	        </div>
-	    </div>
+			<div id="blocker">
+				<div id="testo">
+					<span style="font-size:40px">Click to play</span>
+					<br /> (W, A, S, D = Move, SPACE = Jump, SHIFT = Run, MOUSE = Look around, Q/E = Change Gravity)
+					</br>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div style="font-size:40px" id = "timer"></div>
-	<div id = "points"></div>
-	<div id = "result"></div>
+	<div style="font-size:40px" id="timer"></div>
+	<div id="points">
+
+		<div id="my" class="floating-box">my name</div> <div id="my_lifes" class="floating-box"></div>
+	<div class="after-box"></div>
+		<div id="your" class="floating-box">yor name</div> <div id="your_lifes" class="floating-box"></div>
+		<div class="after-box"></div>
+
+	</div>
+	<div id="result"></div>
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -37,7 +45,7 @@
 	<script src="../js/Map.js"></script>
 	<script src="../js/Player.js"></script>
 	<script src="../js/Bullet.js"></script>
- 	<script src="/socket.io/socket.io.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
 	<script src="../js/main.js"></script>
 
 </body>

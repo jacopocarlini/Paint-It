@@ -1,0 +1,26 @@
+body {
+    background-image: url(http://eskipaper.com/images/paint-wallpaper-3.jpg)
+
+}
+
+
+
+#title {
+    margin-top:20%;
+    margin-left:40%;
+    margin-top:10%;
+    color:#FF2233;
+    font-weight: bold;
+    font-size: 100px;
+}
+
+
+#center{
+    margin: auto;
+    width: 50%;
+    margin-top:5%;
+    margin-left:40%;
+    color:#0000FF;
+    font-weight: bold;
+    font-size: 20px;
+}

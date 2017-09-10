@@ -46,8 +46,9 @@ io.on('connection', function(socket) {
 
     sockets.push(socket);
     socket.on("disconnect", function() {
-        console.log("disconnect 1");
+        console.log("disconnect");
         sockets.splice(sockets.indexOf(socket), 1);
+        // pendings.splice(pendings.indexOf(socket), 1);
     });
 
     socket.on("new player", function(name) {
@@ -58,7 +59,7 @@ io.on('connection', function(socket) {
             'socket': this
         };
         pendings.push(client);
-
+        console.log(pendings.length);
         // console.log("pendings "+pendings.length);
         if (pendings.length > 1) {
             var player1 = pendings.pop();
