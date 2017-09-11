@@ -164,7 +164,7 @@ function generateMap() {
 
         position.z = (position.z * 100) - 350;
         position.x = (position.x * 100) - 350;
-        position.y = (position.y * 100) + 10;
+        position.y = (position.y * 100) + 50;
         // console.log(position);
         pos.push(position);
 
@@ -180,7 +180,7 @@ function startMatch(player1, player2) {
             "name": player1.name,
             "position": {
                 "x": -350,
-                "y": 10,
+                "y": 20,
                 "z": -350
             },
             "rotation": {
@@ -194,7 +194,7 @@ function startMatch(player1, player2) {
             "name": player2.name,
             "position": {
                 "x": 350,
-                "y": 10,
+                "y": 20,
                 "z": 350
             },
             "rotation": {
@@ -211,7 +211,7 @@ function startMatch(player1, player2) {
             "name": player2.name,
             "position": {
                 "x": 350,
-                "y": 10,
+                "y": 20,
                 "z": 350
             },
             "rotation": {
@@ -225,7 +225,7 @@ function startMatch(player1, player2) {
             "name": player1.name,
             "position": {
                 "x": -350,
-                "y": 10,
+                "y": 20,
                 "z": -350
             },
             "rotation": {

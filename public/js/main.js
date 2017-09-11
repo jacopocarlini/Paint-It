@@ -19,6 +19,7 @@ var socket = socket;
 var click = false;
 
 var direction;
+var cuore = "<img src=\"../images/heart.png\">";
 
 function generateMap() {
 
@@ -55,7 +56,6 @@ function punti() {
     var my_points = 0;
     var your_points = 0;
     for (var i = 0; i < objects.length; i++) {
-        console.log(objects[i].colore);
         if (objects[i].colore == "blue") my_points += 1;
         if (objects[i].colore == "red") your_points += 1;
     }
@@ -80,29 +80,24 @@ if (Detector.webgl) {
     }, 1000);
 
     socket.on("start match", function(data) {
-        console.log("start match");
-        console.log(data);
         var text = document.querySelector('#my');
         text.innerHTML = data.player.name;
         var text = document.querySelector('#your');
         text.innerHTML = data.enemy.name;
         var text = document.querySelector('#my_lifes');
-        text.innerHTML="<img src=\"../images/heart.png\"><img src=\"../images/heart.png\"><img src=\"../images/heart.png\"> ";
+        text.innerHTML = cuore + cuore + cuore;
         var text = document.querySelector('#your_lifes');
-        text.innerHTML="<img src=\"../images/heart.png\"><img src=\"../images/heart.png\"><img src=\"../images/heart.png\"> ";
+        text.innerHTML = cuore + cuore + cuore;
         mouselock = new MouseLock();
         var loader = new THREE.JSONLoader();
 
         loader.load(
             // resource URL
-            "models/mech.json",
+            "models/prova2.json",
 
             // pass the loaded data to the onLoad function.
             //Here it is assumed to be an object
             function(geom, mats, skel) {
-                console.log(geom);
-                console.log(mats);
-                console.log(skel);
                 // mech=geom;
                 geometry = geom;
                 materials = mats;
@@ -215,6 +210,12 @@ function init(data) {
 
     socket.on("hit", function() {
         var life = player.damage();
+        var text = document.querySelector('#my_lifes');
+        var t = "";
+        for (var i = 0; i < life; i++) {
+            t += cuore;
+        }
+        text.innerHTML = t;
 
         if (life == 0) {
             if (punti() > 0) socket.emit("win");
@@ -226,40 +227,19 @@ function init(data) {
     socket.on("win", function() {
         console.log("winner");
         var text = document.querySelector('#result');
-        text.style.position = 'absolute';
-        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-        text.style.width = 100;
-        text.style.height = 200;
-        // text.style.backgroundColor = "blue";
         text.innerHTML = "You Win!";
-        text.style.top = 200 + 'px';
-        text.style.left = 400 + 'px';
         ready = false;
     });
     socket.on("lose", function() {
         console.log("lose");
         var text = document.querySelector('#result');
-        text.style.position = 'absolute';
-        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-        text.style.width = 100;
-        text.style.height = 200;
-        // text.style.backgroundColor = "blue";
-        text.innerHTML = "You lose!";
-        text.style.top = 200 + 'px';
-        text.style.left = 400 + 'px';
+        text.innerHTML = "You Lose!";
         ready = false;
     });
     socket.on("pair", function() {
         console.log("pair");
         var text = document.querySelector('#result');
-        text.style.position = 'absolute';
-        //text.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-        text.style.width = 100;
-        text.style.height = 200;
-        // text.style.backgroundColor = "blue";
-        text.innerHTML = "pair!";
-        text.style.top = 200 + 'px';
-        text.style.left = 400 + 'px';
+        text.innerHTML = "Draw!";
         ready = false;
     });
 
@@ -287,18 +267,26 @@ function animate() {
 
     scene.simulate(); // run physics
 
-    if (ready) {
+    if (true) {
         controls.update();
-        // console.log(pointerlock.getDirection());
+
         player.update();
         // enemy.update();
 
         for (var i = 0; i < bullets.length; i++) {
-            // console.log(bullets[i].getMesh().position);
+
             bullets[i].update();
             if (bullets[i].getHit()) {
                 if (bullets[i].getShot()) {
                     socket.emit("hit");
+                    var life = enemy.damage();
+                    var text = document.querySelector('#your_lifes');
+                    var t = "";
+                    for (var j = 0; j < life; j++) {
+                        t += cuore;
+                    }
+                    text.innerHTML = t;
+
                 }
                 scene.remove(bullets[i].getMesh());
                 bullets.splice(i, 1);

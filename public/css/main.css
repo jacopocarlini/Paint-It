@@ -27,11 +27,12 @@ img{
     margin-top: 20%;
 }
 
-#timer{
+#timer, #result{
     color: #0000ff;
     position:absolute;
     margin-top: 10%;
     margin-left:40%;
+    font-size:40px
 }
 
 #points{

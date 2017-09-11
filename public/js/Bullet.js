@@ -82,7 +82,7 @@ Bullet = function() {
             to = obj[0].point;
             o=obj[0];
         }
-        // console.log(flr[0]);
+
 
     }
 

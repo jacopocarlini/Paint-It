@@ -10,8 +10,9 @@ Controls = function(document) {
     var speed = 2.0;
     var mass = 100.0;
 
-    var altezza = 10;
+    var altezza = 20;
     var id = -1;
+    var jump = false;
 
 
     var collision = new Collisions();
@@ -27,7 +28,6 @@ Controls = function(document) {
 
             case 38: // up
             case 87: // w
-                // console.log("avanti");
                 moveForward = true;
                 break;
 
@@ -48,8 +48,9 @@ Controls = function(document) {
 
             case 32: // space
                 if (canJump === true) {
-                    if (gravity == 0) velocity.y += 350;
-                    else velocity.y -= 350;
+                    jump = true;
+                    if (gravity == 0) velocity.y += 400;
+                    else velocity.y -= 400;
                 }
                 canJump = false;
                 break;
@@ -73,7 +74,6 @@ Controls = function(document) {
     };
 
     var onKeyUp = function(event) {
-        // console.log(event.keyCode);
         switch (event.keyCode) {
 
             case 38: // up
@@ -100,6 +100,10 @@ Controls = function(document) {
                 speed = 2.0;
                 break;
 
+            case 32: // space
+                jump = false;
+                break;
+
         }
 
     };
@@ -110,8 +114,7 @@ Controls = function(document) {
 
 
     var leftClick = function(event) {
-        if (event.button == 0 && click) {
-            // console.log("lefttClick");
+        if (event.button == 0 && ready) {
             var bullet = new Bullet();
             bullet.add();
             bullets.push(bullet);
@@ -126,14 +129,11 @@ Controls = function(document) {
             };
             socket.emit("bullet", data);
 
-            // console.log(pointerlock.getObject().position);
-            // console.log(pointerlock.getDirection());
             // var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
             // var objhit = hit.intersectObjects(objects);
             // if (objhit.length > 0) objhit[0].object.material.color.set(0xff0000);
         }
         // if (event.button == 2) {
-        //     // console.log("rightClick");
         //     var hit = new THREE.Raycaster(pointerlock.getObject().position, pointerlock.getDirection(), 0, 100);
         //     var objhit = hit.intersectObjects(objects);
         //     if (objhit.length > 0) objhit[0].object.material.color.set(0x000000);
@@ -147,25 +147,28 @@ Controls = function(document) {
 
     function approx(n) {
         for (var i = 10; i < 1000; i += 10) {
-            if (n < i) return i
+            if (n < i) {
+                if (i - n < n - (i - 10)) return i;
+                else return i - 10;
+            }
         }
         return 10;
     }
 
-    this.getWalk = function(){
+    this.getWalk = function() {
         return moveForward || moveLeft || moveRight || moveBackward;
     }
-    this.getRun = function(){
-        return speed==4.0;
+    this.getRun = function() {
+        return speed == 4.0;
     }
-    this.getGravity = function(){
-            return gravity;
+    this.getGravity = function() {
+        return gravity;
     }
 
     //update
     this.update = function() {
 
-        if (controlsEnabled) {
+        if (controlsEnabled && ready) {
 
 
             var isOnObject = false;
@@ -182,10 +185,10 @@ Controls = function(document) {
             velocity.x -= velocity.x * 10.0 * delta;
             velocity.z -= velocity.z * 10.0 * delta;
             if (gravity == 0) {
-                velocity.y -= 9.0 * mass * delta;
+                velocity.y -= 9.8 * mass * delta;
             } // 100.0 = mass
             else {
-                velocity.y += 9.0 * mass * delta;
+                velocity.y += 9.8 * mass * delta;
             } // 100.0 = mass
 
             if (moveForward) {
@@ -216,15 +219,15 @@ Controls = function(document) {
 
             }
 
-            if (gravity == 0) {
-                if (collision.getGiu()) {
-                    velocity.y = Math.max(0, velocity.y);
-                    // console.log(approx(collision.getIntersectG()[0].point.y));
-                    // pointerlock.getObject().position.y = approx(collision.getIntersectG()[0].point.y) + 10;
 
-                    // console.log(collision.getIntersectG());
+
+            if (gravity == 0) {
+                if (collision.getGiu() && !jump) {
+                    pointerlock.getObject().position.y = approx(collision.getIntersectG()[0].point.y) + altezza;
+                    velocity.y = Math.max(0, velocity.y);
+                    // velocity.y=0;
+
                     canJump = true;
-                    // console.log("true");
                 } else canJump = false;
                 if (collision.getUp()) {
                     velocity.y = -200;
@@ -232,9 +235,10 @@ Controls = function(document) {
                 }
             } else {
                 if (collision.getUp()) {
+                    pointerlock.getObject().position.y = approx(collision.getIntersectU()[0].point.y) -altezza;
                     velocity.y = Math.min(0, velocity.y);
                     canJump = true;
-                    pointerlock.getObject().position.y = Math.round(pointerlock.getObject().position.y);
+
                 } else canJump = false;
                 if (collision.getGiu()) {
                     velocity.y = 200;
@@ -243,11 +247,9 @@ Controls = function(document) {
 
             }
 
-            // console.log(velocity.y);
             pointerlock.getObject().translateX(velocity.x * delta);
             pointerlock.getObject().translateY(velocity.y * delta);
             pointerlock.getObject().translateZ(velocity.z * delta);
-
 
 
             if (pointerlock.getObject().position.y < altezza) {
