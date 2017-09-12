@@ -82,9 +82,9 @@ Player = function(data) {
 
 
 
-            var helper = new THREE.SkeletonHelper( playermesh );
-            helper.material.linewidth = 3;
-            scene.add( helper );
+            // var helper = new THREE.SkeletonHelper( playermesh );
+            // helper.material.linewidth = 3;
+            // scene.add( helper );
 
             mixer = new THREE.AnimationMixer(playermesh);
             walkAction = mixer.clipAction('walk');
@@ -241,6 +241,9 @@ Player = function(data) {
                     idleAction.play()
                 }
 
+                if (data.gravity == 0) {
+
+
                 if(data.rotation.y>0.3){
                     aimAction.stop();
                     aimDownAction.stop();
@@ -251,6 +254,22 @@ Player = function(data) {
                     aimUpAction.stop();
                     aimDownAction.play();
                 }
+
+                }
+                else{
+                    if(data.rotation.y<-0.3){
+                        aimAction.stop();
+                        aimDownAction.stop();
+                        aimUpAction.play();
+                    }
+                    if(data.rotation.y>0.3){
+                        aimAction.stop();
+                        aimUpAction.stop();
+                        aimDownAction.play();
+                    }
+
+                }
+
                 if(data.rotation.y<=0.3 && data.rotation.y>=-0.3){
                     aimUpAction.stop();
                     aimDownAction.stop();

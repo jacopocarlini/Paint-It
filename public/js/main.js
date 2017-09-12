@@ -93,7 +93,7 @@ if (Detector.webgl) {
 
         loader.load(
             // resource URL
-            "models/mecha2.json",
+            "models/mech.json",
 
             // pass the loaded data to the onLoad function.
             //Here it is assumed to be an object
@@ -267,7 +267,7 @@ function animate() {
 
     scene.simulate(); // run physics
 
-    if (true) {
+    if (ready) {
         controls.update();
 
         player.update();

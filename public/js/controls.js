@@ -165,6 +165,8 @@ Controls = function(document) {
         return gravity;
     }
 
+var first=true;
+
     //update
     this.update = function() {
 
@@ -175,6 +177,10 @@ Controls = function(document) {
             var dir;
 
             var time = performance.now();
+            if(first){
+                prevTime=time;
+                first=false;
+            }
             var delta = (time - prevTime) / 1000;
 
             collision.compute();
