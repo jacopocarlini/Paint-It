@@ -15,7 +15,7 @@ Player = function(data) {
 
         var altezza = 20;
         var diff = 15;
-        var playermesh, mixer, walkAction, idleAction;
+        var playermesh, mixer, walkAction, idleAction, aimAction, aimUpAction, aimDownAction;
         var clock = new THREE.Clock();
         var skeleton;
 
@@ -91,6 +91,12 @@ Player = function(data) {
             idleAction = mixer.clipAction('idle');
             walkAction.enabled = true;
             idleAction.enabled = true;
+            aimAction = mixer.clipAction('aim');
+            aimAction.enabled = true;
+            aimUpAction = mixer.clipAction('aim_up');
+            aimDownAction = mixer.clipAction('aim_down');
+            aimUpAction.enabled = true;
+            aimDownAction.enabled = true;
             // walkAction.setEffectiveWeight(0.5);
 
             scene.add(playermesh);
@@ -235,20 +241,23 @@ Player = function(data) {
                     idleAction.play()
                 }
 
-                var d = data.rotation;
-                var v = new THREE.Vector3(d.x,d.y.dz);
-                console.log( skeleton);
+                if(data.rotation.y>0.3){
+                    aimAction.stop();
+                    aimDownAction.stop();
+                    aimUpAction.play();
+                }
+                if(data.rotation.y<-0.3){
+                    aimAction.stop();
+                    aimUpAction.stop();
+                    aimDownAction.play();
+                }
+                if(data.rotation.y<=0.3 && data.rotation.y>=-0.3){
+                    aimUpAction.stop();
+                    aimDownAction.stop();
+                    aimAction.play();
+                }
+                // console.log(skeleton.bones[2].rotation);
 
-                // skeleton.bones[0].rotation.z=0;
-                // skeleton.bones[0].rotation.x=0;
-                // skeleton.bones[0].rotation.y=0;
-
-                // skeleton.bones[2].rotation.x=Math.PI/2;
-
-
-                // skeleton.bones[2].rotation.x = Math.PI * 0.5;
-                // skeleton.bones[2].rotation.y = Math.PI * 0.5;
-                // skeleton.bones[2].rotation.x = Math.PI * 0.5;
 
                     // var v2 = new THREE.Vector2(data.direction.y, data.direction.z);
                     // playermesh.rotation.x = v2.angle(); //NOTE: non so per quale motivo devo mettere rotazione di z invece che x!!!!

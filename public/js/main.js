@@ -93,7 +93,7 @@ if (Detector.webgl) {
 
         loader.load(
             // resource URL
-            "models/prova2.json",
+            "models/mecha2.json",
 
             // pass the loaded data to the onLoad function.
             //Here it is assumed to be an object
