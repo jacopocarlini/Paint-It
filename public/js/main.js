@@ -221,6 +221,7 @@ function init(data) {
             if (punti() > 0) socket.emit("win");
             if (punti() < 0) socket.emit("lose");
             if (punti() == 0) socket.emit("pair");
+            ready=false;
         }
     });
 
