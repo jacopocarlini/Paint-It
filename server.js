@@ -48,7 +48,7 @@ io.on('connection', function(socket) {
     socket.on("disconnect", function() {
         console.log("disconnect");
         sockets.splice(sockets.indexOf(socket), 1);
-        pendings.splice(pendings.indexOf(socket), 1);
+        if(pendings.indexOf(socket)>=0) pendings.splice(pendings.indexOf(socket), 1);
     });
 
     socket.on("new player", function(name) {

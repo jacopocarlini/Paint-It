@@ -1,25 +1,25 @@
 {
-  "name": "fps",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "server",
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jacopo1395/fps.git"
-  },
-  "author": "jacopo carlini",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jacopo1395/fps/issues"
-  },
-  "homepage": "https://github.com/jacopo1395/fps#readme",
-  "dependencies": {
-    "express": "^4.15.3",
-    "socket.io": "*",
-    "underscore": "*"
-  }
+    "name": "fps",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server.js",
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jacopo1395/fps.git"
+    },
+    "author": "jacopo carlini",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/jacopo1395/fps/issues"
+    },
+    "homepage": "https://github.com/jacopo1395/fps#readme",
+    "dependencies": {
+        "express": "^4.15.3",
+        "socket.io": "*",
+        "underscore": "*"
+    }
 }
