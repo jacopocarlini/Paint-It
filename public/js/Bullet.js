@@ -2,7 +2,7 @@ Bullet = function() {
     var direction;
     var sphere;
 
-    var speed = 2000;
+    var speed = 1500;
     var delta;
     var prevTime = performance.now();
     var velocity = new THREE.Vector3();

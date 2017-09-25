@@ -97,7 +97,7 @@ Player = function(data) {
             aimDownAction = mixer.clipAction('aim_down');
             aimUpAction.enabled = true;
             aimDownAction.enabled = true;
-            // walkAction.setEffectiveWeight(0.5);
+            walkAction.setEffectiveWeight(1.5);
 
             scene.add(playermesh);
 
