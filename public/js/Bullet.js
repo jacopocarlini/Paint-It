@@ -2,7 +2,7 @@ Bullet = function() {
     var direction;
     var sphere;
 
-    var speed = 100;
+    var speed = 2000;
     var delta;
     var prevTime = performance.now();
     var velocity = new THREE.Vector3();
@@ -30,9 +30,9 @@ Bullet = function() {
         sphere.position.y = pointerlock.getObject().position.y + (nord.y * 20);
         sphere.position.z = pointerlock.getObject().position.z + (nord.z * 20);
         direction = pointerlock.getDirection();
-        direction.x *= 2000;
-        direction.y *= 2000;
-        direction.z *= 2000;
+        direction.x *= speed;
+        direction.y *= speed;
+        direction.z *= speed;
         // Enable CCD if the object moves more than 1 meter in one simulation frame
         sphere.setCcdMotionThreshold(1);
 
@@ -102,9 +102,9 @@ Bullet = function() {
         sphere.position.y = data.position.y + (nord.y * 20);
         sphere.position.z = data.position.z + (nord.z * 20);
         direction = data.direction;
-        direction.x *= 2000;
-        direction.y *= 2000;
-        direction.z *= 2000;
+        direction.x *= speed;
+        direction.y *= speed;
+        direction.z *= speed;
         // Enable CCD if the object moves more than 1 meter in one simulation frame
         sphere.setCcdMotionThreshold(1);
 
@@ -167,6 +167,7 @@ Bullet = function() {
     this.update = function() {
         sphere.setLinearVelocity(direction);
         if (distance(from, sphere.position) > distance(from, to)) {
+            console.log("out");
             if(o.name=="box"){
                 hit = true;
                 socket.emit("color", objects.indexOf(o));
