@@ -11,7 +11,7 @@ var floors = [];
 var mouselock, controls, pointerlock;
 var player, enemy, bullets = [],
     enemy_bullets = [];
-var mech;
+var mech, texture;
 
 var controlsEnabled = false;
 var ready = false;
@@ -91,32 +91,43 @@ if (Detector.webgl) {
         mouselock = new MouseLock();
         var loader = new THREE.JSONLoader();
 
-        loader.load(
-            // resource URL
-            "models/mech.json",
+        texture = new THREE.Texture();
+        var loader2 = new THREE.ImageLoader();
+        loader2.load("images/ball.jpg", function(image) {
+            texture.image = image;
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(4, 4);
+            texture.needUpdate = true;
 
-            // pass the loaded data to the onLoad function.
-            //Here it is assumed to be an object
-            function(geom, mats, skel) {
-                // mech=geom;
-                geometry = geom;
-                materials = mats;
 
-                init(data);
-                animate();
-            },
 
-            // Function called when download progresses
-            function(xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-            },
+            loader.load(
+                // resource URL
+                "models/mech.json",
 
-            // Function called when download errors
-            function(xhr) {
-                console.error('An error happened');
-            }
-        );
+                // pass the loaded data to the onLoad function.
+                //Here it is assumed to be an object
+                function(geom, mats, skel) {
+                    // mech=geom;
+                    geometry = geom;
+                    materials = mats;
 
+                    init(data);
+                    animate();
+                },
+
+                // Function called when download progresses
+                function(xhr) {
+                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+
+                // Function called when download errors
+                function(xhr) {
+                    console.error('An error happened');
+                }
+            );
+        });
 
 
     });
@@ -221,7 +232,7 @@ function init(data) {
             if (punti() > 0) socket.emit("win");
             if (punti() < 0) socket.emit("lose");
             if (punti() == 0) socket.emit("pair");
-            ready=false;
+            ready = false;
         }
     });
 
