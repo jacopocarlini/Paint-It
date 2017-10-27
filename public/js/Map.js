@@ -75,13 +75,13 @@ Map = function(data) {
 
         }
 
-        // floor(0, 0, 0, 0, 0, 0);
-        // floor(0, 400, 0, -Math.PI, 0, 0);
-        // floor(400, 200, 0, 0, 0, Math.PI / 2);
-        // floor(-400, 200, 0, 0, 0, -Math.PI / 2);
-        // floor(400, 200, 0, 0, 0, Math.PI / 2);
-        // floor(0, 200, 400, -Math.PI / 2, 0, 0);
-        // floor(0, 200, -400, Math.PI / 2, 0, 0);
+        floor(0, 0, 0, 0, 0, 0);
+        floor(0, 400, 0, -Math.PI, 0, 0);
+        floor(400, 200, 0, 0, 0, Math.PI / 2);
+        floor(-400, 200, 0, 0, 0, -Math.PI / 2);
+        floor(400, 200, 0, 0, 0, Math.PI / 2);
+        floor(0, 200, 400, -Math.PI / 2, 0, 0);
+        floor(0, 200, -400, Math.PI / 2, 0, 0);
 
 
 

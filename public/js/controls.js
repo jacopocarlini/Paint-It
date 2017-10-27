@@ -240,7 +240,7 @@ var first=true;
                     // canJump = true;
                 }
             } else {
-                if (collision.getUp()) {
+                if (collision.getUp() && !jump) {
                     pointerlock.getObject().position.y = approx(collision.getIntersectU()[0].point.y) -altezza;
                     velocity.y = Math.min(0, velocity.y);
                     canJump = true;
