@@ -2,10 +2,11 @@ Map = function(data) {
 
 
         function ground(px, py, pz, rx, ry, rz) {
+            // console.log("texture= ",texture);
 
             var ground_material = Physijs.createMaterial(
                 new THREE.MeshPhongMaterial({
-                    color: 0x888888,
+                    color: 0xffffff,
                     map:texture
 
                 }),
@@ -100,7 +101,7 @@ Map = function(data) {
         for (var i = 0; i < data.length; i++) {
             var box_material = Physijs.createMaterial(
                 new THREE.MeshLambertMaterial({
-                    color: 0x888888
+                    color: 0xbbbbbb
                 }),
                 .8, // high friction
                 .3 // low restitution

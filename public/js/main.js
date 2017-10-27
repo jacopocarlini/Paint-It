@@ -91,16 +91,19 @@ if (Detector.webgl) {
         mouselock = new MouseLock();
         var loader = new THREE.JSONLoader();
 
-        texture = new THREE.Texture();
-        var loader2 = new THREE.ImageLoader();
-        loader2.load("images/ball.jpg", function(image) {
-            texture.image = image;
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(4, 4);
-            texture.needUpdate = true;
-
-
+        // texture = new THREE.Texture();
+        var loader2 = new THREE.TextureLoader();
+        loader2.load("images/futuristic.jpg", function(image) {
+            // console.log("image=", image);
+            texture = image;
+            // texture.image = image;
+            // texture.wrapS = THREE.RepeatWrapping;
+            // texture.wrapT = THREE.RepeatWrapping;
+            // texture.repeat.set(4, 4);
+            // texture.needUpdate = true;
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            texture.offset.set(0, 0);
+            texture.repeat.set(20, 20);
 
             loader.load(
                 // resource URL
